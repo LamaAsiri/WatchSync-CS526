@@ -1,0 +1,51 @@
+# Builds the app on GitHub's computers (no Android Studio needed)
+# and attaches app-debug.apk to a release you can download on your phone.
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Check google-services.json
+        run: |
+          if [ ! -f app/google-services.json ]; then
+            echo "::error::app/google-services.json is missing. Upload it from Firebase into the app folder."
+            exit 1
+          fi
+
+      - name: Write TMDB key
+        run: echo "TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}" > secrets.properties
+
+      - name: Build APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: WatchSync-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: WatchSync build ${{ github.run_number }}
+          prerelease: true
+          files: app/build/outputs/apk/debug/app-debug.apk

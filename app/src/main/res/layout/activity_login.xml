@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                style="@style/Text.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome back" />
+
+            <TextView
+                style="@style/Text.Muted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Log in to see your shows and groups." />
+
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="28dp" android:labelFor="@id/etEmail" android:text="Email" />
+            <EditText
+                android:id="@+id/etEmail"
+                style="@style/Field"
+                android:autofillHints="emailAddress"
+                android:hint="you@example.com"
+                android:inputType="textEmailAddress" />
+
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etPassword" android:text="Password" />
+            <EditText
+                android:id="@+id/etPassword"
+                style="@style/Field"
+                android:autofillHints="password"
+                android:hint="Your password"
+                android:inputType="textPassword" />
+
+            <TextView
+                android:id="@+id/tvForgot"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:text="Forgot password?"
+                android:textColor="@color/lava"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogin"
+                style="@style/Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Log in" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:text="Don't have an account? Sign up"
+                android:textColor="@color/flag_red"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

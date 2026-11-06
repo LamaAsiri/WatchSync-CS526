@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_toolbar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:id="@+id/tvEmpty"
+                style="@style/Text.Muted"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:text="The group has no show yet. Vote for one first."
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/layoutContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_rounded"
+                    android:backgroundTint="@color/ink"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <TextView android:id="@+id/tvShowTitle" style="@style/Text.Overline" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/ink_light" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="I've watched up to" android:textColor="@color/ink_light" android:textSize="13sp" android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMinus"
+                            style="@style/Widget.Material3.Button.IconButton.Outlined"
+                            android:layout_width="52dp"
+                            android:layout_height="52dp"
+                            android:contentDescription="One episode back"
+                            app:icon="@drawable/ic_remove"
+                            app:iconTint="@color/papaya"
+                            app:strokeColor="@color/steel" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView android:id="@+id/tvMyEpisode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/papaya" android:textSize="34sp" android:textStyle="bold" />
+                            <TextView android:id="@+id/tvMyTotal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/ink_light" android:textSize="13sp" android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnPlus"
+                            style="@style/Widget.Material3.Button.IconButton.Filled"
+                            android:layout_width="52dp"
+                            android:layout_height="52dp"
+                            android:contentDescription="One episode forward"
+                            app:backgroundTint="@color/flag_red"
+                            app:icon="@drawable/ic_add"
+                            app:iconTint="@color/white" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvPartyHint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/papaya"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/Text.Section"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Spoiler radar" />
+
+                <TextView
+                    style="@style/Text.Muted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Who is ahead of you (can spoil you) and who is behind (don't spoil them)."
+                    android:textSize="12sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvMembers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEpisodes"
+                    style="@style/Button.Outline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="See all episodes" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

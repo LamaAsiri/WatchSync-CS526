@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:roundIcon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.WatchSync">
+
+        <!-- 1. UI & Navigation (Reemas) -->
+        <activity
+            android:name=".auth.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".auth.WelcomeActivity" android:exported="false" />
+        <activity android:name=".auth.LoginActivity" android:exported="false" />
+        <activity android:name=".auth.SignUpActivity" android:exported="false" />
+        <activity android:name=".auth.ForgotPasswordActivity" android:exported="false" />
+        <activity android:name=".main.MainActivity" android:exported="false" />
+        <activity android:name=".main.EditProfileActivity" android:exported="false" />
+
+        <!-- 2. Groups & Database (Jory) -->
+        <activity android:name=".groups.CreateGroupActivity" android:exported="false" />
+        <activity android:name=".groups.JoinGroupActivity" android:exported="false" />
+        <activity android:name=".groups.GroupActivity" android:exported="false" />
+        <activity android:name=".groups.MembersActivity" android:exported="false" />
+
+        <!-- 3. Shows & Voting (Lama) -->
+        <activity
+            android:name=".shows.SearchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity android:name=".shows.ShowDetailActivity" android:exported="false" />
+        <activity android:name=".groups.GroupWatchlistActivity" android:exported="false" />
+        <activity android:name=".groups.StartVoteActivity" android:exported="false" />
+        <activity android:name=".groups.VoteActivity" android:exported="false" />
+
+        <!-- 4. Watch Parties & Spoiler Protection (Lama Aseeri) -->
+        <activity android:name=".parties.PartiesActivity" android:exported="false" />
+        <activity android:name=".parties.SchedulePartyActivity" android:exported="false" />
+        <activity android:name=".parties.PartyDetailActivity" android:exported="false" />
+        <activity android:name=".parties.SpoilerRadarActivity" android:exported="false" />
+
+        <receiver
+            android:name=".reminders.PartyReminderReceiver"
+            android:exported="false" />
+    </application>
+</manifest>

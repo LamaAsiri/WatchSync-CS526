@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 15 forces edge-to-edge; keep the classic layout so nothing hides under the status bar -->
+    <style name="Theme.WatchSync" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/ink</item>
+        <item name="colorOnPrimary">@color/papaya</item>
+        <item name="colorSecondary">@color/flag_red</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/flag_red</item>
+        <item name="colorOnSecondaryContainer">@color/white</item>
+        <item name="android:colorBackground">@color/papaya</item>
+        <item name="colorSurface">@color/papaya</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="android:textColorPrimary">@color/ink</item>
+        <item name="android:textColorSecondary">@color/muted</item>
+        <item name="android:windowBackground">@color/papaya</item>
+        <item name="android:statusBarColor">@color/papaya</item>
+        <item name="android:navigationBarColor">@color/ink</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+    </style>
+</resources>

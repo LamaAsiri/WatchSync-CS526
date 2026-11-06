@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView style="@style/Text.Title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Create a group" />
+            <TextView style="@style/Text.Muted" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Name it, then share the code with your friends. You'll be the admin." />
+
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:labelFor="@id/etGroupName" android:text="Group name" />
+            <EditText android:id="@+id/etGroupName" style="@style/Field" android:hint="e.g. Anime Night" android:importantForAutofill="no" android:inputType="textCapWords" android:maxLength="30" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCreate"
+                style="@style/Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Create group" />
+
+            <LinearLayout
+                android:id="@+id/layoutCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_rounded"
+                android:backgroundTint="@color/ink"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="22dp"
+                android:visibility="gone">
+
+                <TextView style="@style/Text.Overline" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="YOUR GROUP CODE" android:textColor="@color/ink_light" />
+
+                <TextView
+                    android:id="@+id/tvCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:letterSpacing="0.3"
+                    android:textColor="@color/papaya"
+                    android:textSize="38sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnCopy" style="@style/Button.Red" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="6dp" android:layout_weight="1" android:text="Copy" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnShare" style="@style/Button.Red" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:layout_weight="1" android:text="Share" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnOpenGroup"
+                    style="@style/Button.Primary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/papaya"
+                    android:text="Open group"
+                    android:textColor="@color/ink" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

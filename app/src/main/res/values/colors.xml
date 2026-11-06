@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fiery Ocean palette -->
+    <color name="papaya">#FDF0D5</color>
+    <color name="ink">#003049</color>
+    <color name="steel">#669BBC</color>
+    <color name="flag_red">#C1121F</color>
+    <color name="lava">#780000</color>
+
+    <!-- Helpers -->
+    <color name="card">#FFF8EC</color>
+    <color name="line">#EED9B0</color>
+    <color name="muted">#4F5F6E</color>
+    <color name="steel_tint">#DCE8F0</color>
+    <color name="red_tint">#F8D7D3</color>
+    <color name="ink_light">#B9D0E0</color>
+    <color name="ink_dark">#0B3D5C</color>
+    <color name="white">#FFFFFF</color>
+</resources>

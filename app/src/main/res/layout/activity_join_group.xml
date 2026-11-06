@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView style="@style/Text.Title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Join a group" />
+        <TextView style="@style/Text.Muted" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Type the 6-character code your friend sent you." />
+
+        <EditText
+            android:id="@+id/etCode"
+            style="@style/Field"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:hint="K7P2QX"
+            android:importantForAutofill="no"
+            android:inputType="textCapCharacters|textNoSuggestions"
+            android:letterSpacing="0.3"
+            android:maxLength="6"
+            android:minHeight="64dp"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFind"
+            style="@style/Button.Outline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="Find group" />
+
+        <LinearLayout
+            android:id="@+id/cardFound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_rounded"
+            android:backgroundTint="@color/ink"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <TextView style="@style/Text.Overline" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="GROUP FOUND" android:textColor="@color/ink_light" />
+            <TextView android:id="@+id/tvFoundName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:textColor="@color/papaya" android:textSize="22sp" android:textStyle="bold" />
+            <TextView android:id="@+id/tvFoundInfo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/ink_light" android:textSize="13sp" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnJoin"
+            style="@style/Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Join group"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>
