@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "301256921698",
+    "firebase_url": "https://watchsync-c9a70-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "watchsync-c9a70",
+    "storage_bucket": "watchsync-c9a70.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301256921698:android:8bb57d02a512fae784773b",
+        "android_client_info": {
+          "package_name": "com.cs526.watchsync"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "301256921698-7h3b5b26hjjh8p8qmcgrrr541a2719qg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqpVQUsVd3cCjJhp_U_bpc6cFyCrIeGUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "301256921698-7h3b5b26hjjh8p8qmcgrrr541a2719qg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
