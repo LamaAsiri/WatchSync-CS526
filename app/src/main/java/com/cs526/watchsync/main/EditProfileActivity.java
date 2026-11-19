@@ -1,5 +1,7 @@
 package com.cs526.watchsync.main;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,11 +24,11 @@ public class EditProfileActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-        setupToolbar("Edit profile");
+        setupToolbar(Lang.s(R.string.title_edit_profile));
 
         EditText etName = findViewById(R.id.etName);
         etName.setText(Prefs.name(this));
-        ((TextView) findViewById(R.id.tvEmail)).setText("Email: " + Db.email() + " (can't be changed)");
+        ((TextView) findViewById(R.id.tvEmail)).setText(Lang.s(R.string.email_cant_change, Db.email()));
 
         ColorPicker picker = new ColorPicker(findViewById(R.id.colorPicker), Prefs.color(this),
                 () -> etName.getText().toString());
@@ -38,7 +40,7 @@ public class EditProfileActivity extends BaseActivity {
 
         findViewById(R.id.btnSave).setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
-            if (name.isEmpty()) { Ui.toast(this, "Enter a name"); return; }
+            if (name.isEmpty()) { Ui.toast(this, Lang.s(R.string.err_enter_a_name)); return; }
             String color = picker.selected();
             String uid = Db.uid();
             // Update my profile + my name/colour inside every group I'm in
@@ -52,9 +54,9 @@ public class EditProfileActivity extends BaseActivity {
                 }
                 Db.root().updateChildren(updates).addOnSuccessListener(x -> {
                     Prefs.saveUser(this, name, color);
-                    Ui.toast(this, "Saved");
+                    Ui.toast(this, Lang.s(R.string.saved));
                     finish();
-                }).addOnFailureListener(e -> Ui.toast(this, "Couldn't save: " + e.getMessage()));
+                }).addOnFailureListener(e -> Ui.toast(this, Lang.s(R.string.err_couldnt_save, e.getMessage())));
             });
         });
     }

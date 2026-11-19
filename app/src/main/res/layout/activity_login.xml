@@ -20,29 +20,29 @@
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Welcome back" />
+                android:text="@string/welcome_back" />
 
             <TextView
                 style="@style/Text.Muted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Log in to see your shows and groups." />
+                android:text="@string/log_in_to_see_your_shows" />
 
-            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="28dp" android:labelFor="@id/etEmail" android:text="Email" />
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="28dp" android:labelFor="@id/etEmail" android:text="@string/email" />
             <EditText
                 android:id="@+id/etEmail"
                 style="@style/Field"
                 android:autofillHints="emailAddress"
-                android:hint="you@example.com"
+                android:hint="@string/you_example_com"
                 android:inputType="textEmailAddress" />
 
-            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etPassword" android:text="Password" />
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etPassword" android:text="@string/password" />
             <EditText
                 android:id="@+id/etPassword"
                 style="@style/Field"
                 android:autofillHints="password"
-                android:hint="Your password"
+                android:hint="@string/your_password"
                 android:inputType="textPassword" />
 
             <TextView
@@ -51,7 +51,7 @@
                 android:layout_height="48dp"
                 android:layout_gravity="end"
                 android:gravity="center"
-                android:text="Forgot password?"
+                android:text="@string/forgot_password"
                 android:textColor="@color/lava"
                 android:textStyle="bold" />
 
@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Log in" />
+                android:text="@string/log_in" />
 
             <ProgressBar
                 android:id="@+id/progress"
@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:gravity="center"
-                android:text="Don't have an account? Sign up"
+                android:text="@string/dont_have_an_account_sign_up"
                 android:textColor="@color/flag_red"
                 android:textStyle="bold" />
         </LinearLayout>

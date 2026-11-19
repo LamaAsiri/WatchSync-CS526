@@ -1,5 +1,7 @@
 package com.cs526.watchsync.groups;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,15 +45,15 @@ public class StartVoteActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        setupToolbar("Start a vote");
+        setupToolbar(Lang.s(R.string.title_start_vote));
         code = getIntent().getStringExtra(GroupActivity.EXTRA_CODE);
 
-        ((TextView) findViewById(R.id.tvHeader)).setText("Pick 2 to 4 shows from the watchlist. The winner will be up next.");
-        ((TextView) findViewById(R.id.tvFooter)).setText("Votes stay hidden until you end the vote. If there's a tie, you pick.");
+        ((TextView) findViewById(R.id.tvHeader)).setText(Lang.s(R.string.start_vote_header));
+        ((TextView) findViewById(R.id.tvFooter)).setText(Lang.s(R.string.start_vote_footer));
         btnStart = findViewById(R.id.btnMain);
         btnStart.setVisibility(View.VISIBLE);
 
-        adapter = new ShowAdapter((show, h) -> h.showAction(picked.contains(show.tmdbId) ? "✓ Picked" : "Pick"));
+        adapter = new ShowAdapter((show, h) -> h.showAction(Lang.s(picked.contains(show.tmdbId) ? R.string.picked : R.string.pick)));
         adapter.setOnAction(this::toggle);
         adapter.setOnClick(this::toggle);
         RecyclerView rv = findViewById(R.id.rvList);
@@ -70,13 +72,13 @@ public class StartVoteActivity extends BaseActivity {
     private void toggle(Show s) {
         if (picked.contains(s.tmdbId)) picked.remove(s.tmdbId);
         else if (picked.size() < 4) picked.add(s.tmdbId);
-        else Ui.toast(this, "4 shows max");
+        else Ui.toast(this, Lang.s(R.string.four_max));
         adapter.notifyDataSetChanged();
         updateButton();
     }
 
     private void updateButton() {
-        btnStart.setText("Start vote (" + picked.size() + " picked)");
+        btnStart.setText(Lang.s(R.string.start_vote_n, picked.size()));
         btnStart.setEnabled(picked.size() >= 2);
     }
 

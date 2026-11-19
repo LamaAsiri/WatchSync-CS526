@@ -1,5 +1,7 @@
 package com.cs526.watchsync.parties;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,7 +50,7 @@ public class PartiesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parties);
-        setupToolbar("Watch Parties");
+        setupToolbar(Lang.s(R.string.title_watch_parties));
         code = getIntent().getStringExtra(GroupActivity.EXTRA_CODE);
 
         tvEmpty = findViewById(R.id.tvEmpty);
@@ -63,7 +65,7 @@ public class PartiesActivity extends BaseActivity {
         toggle.addOnButtonCheckedListener((group, id, checked) -> { if (checked) render(); });
         findViewById(R.id.fabSchedule).setOnClickListener(v -> {
             if (!hasShow) {
-                Ui.toast(this, "Pick the group's show first (vote in the group page)");
+                Ui.toast(this, Lang.s(R.string.pick_group_show_first));
                 return;
             }
             SchedulePartyActivity.open(this, code);
@@ -79,7 +81,7 @@ public class PartiesActivity extends BaseActivity {
             public void onDataChange(@NonNull DataSnapshot g) {
                 hasShow = g.hasChild("nowWatching");
                 String now = Snap.str(g.child("nowWatching/title"));
-                tvNowShow.setText(hasShow ? "Now watching: " + now : "No show yet. Vote for one first.");
+                tvNowShow.setText(hasShow ? Lang.s(R.string.now_watching_x, now) : Lang.s(R.string.no_show_vote_first));
                 setToolbarTitle("Parties · " + Snap.str(g.child("name")));
                 all.clear();
                 for (DataSnapshot p : g.child("parties").getChildren()) all.add(Party.from(p));
@@ -106,6 +108,6 @@ public class PartiesActivity extends BaseActivity {
         Collections.sort(list, (a, b) -> upcoming ? Long.compare(a.time, b.time) : Long.compare(b.time, a.time));
         adapter.setItems(list);
         tvEmpty.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
-        tvEmpty.setText(upcoming ? "No parties planned. Tap \"Schedule party\" to plan one." : "No past parties yet.");
+        tvEmpty.setText(Lang.s(upcoming ? R.string.no_parties_planned : R.string.no_past_parties));
     }
 }

@@ -1,5 +1,7 @@
 package com.cs526.watchsync.groups;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -91,7 +93,7 @@ public class GroupActivity extends BaseActivity {
 
     private void bind(DataSnapshot g) {
         if (!g.exists() || !g.child("members").hasChild(Db.uid())) {
-            Ui.toast(this, "You're not in this group anymore");
+            Ui.toast(this, Lang.s(R.string.not_in_group));
             finish();
             return;
         }
@@ -100,7 +102,7 @@ public class GroupActivity extends BaseActivity {
         String adminUid = Snap.str(g.child("adminUid"));
         admin = adminUid.equals(Db.uid());
         String adminName = Snap.str(g.child("members").child(adminUid).child("name"));
-        ((TextView) findViewById(R.id.tvAdmin)).setText(admin ? "You're the admin" : "Admin: " + adminName);
+        ((TextView) findViewById(R.id.tvAdmin)).setText(admin ? Lang.s(R.string.you_are_admin) : Lang.s(R.string.admin_x, adminName));
         ((TextView) findViewById(R.id.tvCode)).setText(code);
 
         long members = g.child("members").getChildrenCount();
@@ -118,26 +120,26 @@ public class GroupActivity extends BaseActivity {
             ((TextView) findViewById(R.id.tvNowTitle)).setText(now.title);
             Ui.poster((ImageView) findViewById(R.id.ivNowPoster), now.posterPath);
             TextView party = findViewById(R.id.tvNowParty);
-            party.setText(nextParty == null ? "No party scheduled"
-                    : "Next party: " + Ui.format("EEE h:mm a", nextParty.time) + " · " + nextParty.episodeLabel());
+            party.setText(nextParty == null ? Lang.s(R.string.no_party_scheduled)
+                    : Lang.s(R.string.next_party_x, Ui.format("EEE h:mm a", nextParty.time), nextParty.episodeLabel()));
             findViewById(R.id.btnFinish).setVisibility(admin ? View.VISIBLE : View.GONE);
             loadMyProgress(nextParty);
         } else {
             cardNow.setVisibility(View.GONE);
             noShow.setVisibility(View.VISIBLE);
             String hint;
-            if (voteOpen) hint = "A vote is running. The winner becomes the group's show.";
-            else if (watchlist < 2) hint = "Add at least 2 shows to the Watchlist, then the admin starts a vote.";
-            else hint = admin ? "Start a vote to pick your first show." : "Waiting for the admin to start a vote.";
+            if (voteOpen) hint = Lang.s(R.string.hint_vote_running);
+            else if (watchlist < 2) hint = Lang.s(R.string.hint_add_two);
+            else hint = Lang.s(admin ? R.string.hint_start_vote : R.string.hint_wait_admin);
             ((TextView) findViewById(R.id.tvNoShow)).setText(hint);
-            ((TextView) findViewById(R.id.tvRadarSub)).setText("Pick a show first");
+            ((TextView) findViewById(R.id.tvRadarSub)).setText(Lang.s(R.string.pick_show_first));
         }
 
         // Up next
         TextView upNext = findViewById(R.id.tvUpNext);
         if (g.hasChild("upNext")) {
             upNext.setVisibility(View.VISIBLE);
-            upNext.setText("Up next: " + Snap.str(g.child("upNext/title")) + " (starts when you finish this one)");
+            upNext.setText(Lang.s(R.string.up_next_x, Snap.str(g.child("upNext/title"))));
         } else {
             upNext.setVisibility(View.GONE);
         }
@@ -147,8 +149,8 @@ public class GroupActivity extends BaseActivity {
         if (voteOpen) {
             long voted = g.child("vote/ballots").getChildrenCount();
             boolean iVoted = g.child("vote/ballots").hasChild(Db.uid());
-            ((TextView) findViewById(R.id.tvVoteSub)).setText(voted + " of " + members + " voted"
-                    + (iVoted ? " · you voted" : " · tap to vote"));
+            ((TextView) findViewById(R.id.tvVoteSub)).setText(Lang.s(R.string.voted_of, voted, members)
+                    + Lang.s(iVoted ? R.string.you_voted : R.string.tap_to_vote));
         }
         findViewById(R.id.btnStartVote).setVisibility(admin && !voteOpen && !g.hasChild("upNext") ? View.VISIBLE : View.GONE);
 
@@ -156,9 +158,9 @@ public class GroupActivity extends BaseActivity {
         int upcoming = 0;
         long t = System.currentTimeMillis();
         for (DataSnapshot p : g.child("parties").getChildren()) if (Snap.lng(p.child("time")) > t) upcoming++;
-        ((TextView) findViewById(R.id.tvPartiesSub)).setText(upcoming + " upcoming");
-        ((TextView) findViewById(R.id.tvWatchlistSub)).setText(watchlist + " shows");
-        ((TextView) findViewById(R.id.tvMembersSub)).setText(members + " · invite");
+        ((TextView) findViewById(R.id.tvPartiesSub)).setText(Lang.s(R.string.n_upcoming, upcoming));
+        ((TextView) findViewById(R.id.tvWatchlistSub)).setText(Lang.s(R.string.n_shows, watchlist));
+        ((TextView) findViewById(R.id.tvMembersSub)).setText(Lang.s(R.string.members_invite, members));
     }
 
     private Party nextParty(DataSnapshot g) {
@@ -180,13 +182,13 @@ public class GroupActivity extends BaseActivity {
                     now.progress = mine;
                     TextView tv = findViewById(R.id.tvNowProgress);
                     LinearProgressIndicator pb = findViewById(R.id.pbNow);
-                    tv.setText(mine == 0 ? "You haven't started" : "You're on " + now.progressLabel());
+                    tv.setText(mine == 0 ? Lang.s(R.string.you_havent_started) : Lang.s(R.string.youre_on_x, now.progressLabel()));
                     int max = now.movie() ? 1 : Math.max(1, now.totalEpisodes);
                     pb.setMax(max);
                     pb.setProgress(Math.min(mine, max));
                     TextView radar = findViewById(R.id.tvRadarSub);
                     int catchUp = nextParty == null ? 0 : nextParty.episodesToCatchUp(mine);
-                    radar.setText(catchUp > 0 ? EpisodeMath.count(catchUp) + " to catch up" : "Who's ahead of you");
+                    radar.setText(catchUp > 0 ? Lang.s(R.string.to_catch_up, EpisodeMath.count(catchUp)) : Lang.s(R.string.whos_ahead));
                 });
     }
 
@@ -194,9 +196,9 @@ public class GroupActivity extends BaseActivity {
     private void confirmFinish() {
         if (now == null) return;
         new AlertDialog.Builder(this)
-                .setTitle("Finished " + now.title + "?")
-                .setMessage("It moves to Finished. If a show is Up next, it becomes the new Now Watching.")
-                .setPositiveButton("Yes, finished", (d, w) -> ref.get().addOnSuccessListener(g -> {
+                .setTitle(Lang.s(R.string.finished_x, now.title))
+                .setMessage(Lang.s(R.string.finish_msg))
+                .setPositiveButton(Lang.s(R.string.yes_finished), (d, w) -> ref.get().addOnSuccessListener(g -> {
                     Map<String, Object> updates = new HashMap<>();
                     Show done = Show.from(g.child("nowWatching"));
                     done.progress = 0;
@@ -211,7 +213,7 @@ public class GroupActivity extends BaseActivity {
                     updates.put("upNext", null);
                     ref.updateChildren(updates);
                 }))
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(Lang.s(R.string.cancel), null)
                 .show();
     }
 }

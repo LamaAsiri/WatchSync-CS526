@@ -1,5 +1,7 @@
 package com.cs526.watchsync.util;
 
+import com.cs526.watchsync.R;
+
 /**
  * Episodes are counted as ONE running number across all seasons (1, 2, 3 ... total).
  * seasonCounts keeps how many episodes each season has, e.g. "24,23" = S1 has 24, S2 has 23.
@@ -20,15 +22,15 @@ public final class EpisodeMath {
 
     /** 14 with "12,12" -> "S2 E2". */
     public static String label(int episode, String seasonCounts, boolean movie) {
-        if (movie) return "Movie";
-        if (episode <= 0) return "Not started";
+        if (movie) return Lang.s(R.string.type_movie);
+        if (episode <= 0) return Lang.s(R.string.not_started);
         int[] c = counts(seasonCounts);
         int left = episode;
         for (int i = 0; i < c.length; i++) {
-            if (left <= c[i]) return "S" + (i + 1) + " E" + left;
+            if (left <= c[i]) return Lang.s(R.string.ep_label, i + 1, left);
             left -= c[i];
         }
-        return "Episode " + episode;
+        return Lang.s(R.string.episode_n, episode);
     }
 
     /** Season 2 episode 3 with "12,12" -> 15. season is 1-based. */
@@ -52,6 +54,6 @@ public final class EpisodeMath {
 
     /** "2 episodes" / "1 episode". */
     public static String count(int n) {
-        return n + (n == 1 ? " episode" : " episodes");
+        return Lang.plural(R.plurals.episodes_count, n);
     }
 }

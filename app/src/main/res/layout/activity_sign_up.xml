@@ -20,7 +20,7 @@
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Create your account" />
+                android:text="@string/create_your_account" />
 
             <include
                 android:id="@+id/colorPicker"
@@ -29,16 +29,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp" />
 
-            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etName" android:text="Name" />
-            <EditText android:id="@+id/etName" style="@style/Field" android:autofillHints="name" android:hint="Your name" android:inputType="textPersonName|textCapWords" />
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etName" android:text="@string/name" />
+            <EditText android:id="@+id/etName" style="@style/Field" android:autofillHints="name" android:hint="@string/your_name" android:inputType="textPersonName|textCapWords" />
 
-            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etEmail" android:text="Email" />
-            <EditText android:id="@+id/etEmail" style="@style/Field" android:autofillHints="emailAddress" android:hint="you@example.com" android:inputType="textEmailAddress" />
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etEmail" android:text="@string/email" />
+            <EditText android:id="@+id/etEmail" style="@style/Field" android:autofillHints="emailAddress" android:hint="@string/you_example_com" android:inputType="textEmailAddress" />
 
-            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etPassword" android:text="Password (at least 6 characters)" />
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etPassword" android:text="@string/password_at_least_6_characters" />
             <EditText android:id="@+id/etPassword" style="@style/Field" android:autofillHints="password" android:inputType="textPassword" />
 
-            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etConfirm" android:text="Confirm password" />
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etConfirm" android:text="@string/confirm_password" />
             <EditText android:id="@+id/etConfirm" style="@style/Field" android:autofillHints="password" android:inputType="textPassword" />
 
             <com.google.android.material.button.MaterialButton
@@ -47,14 +47,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
-                android:text="Create account" />
+                android:text="@string/create_account" />
 
             <TextView
                 android:id="@+id/tvLogin"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:gravity="center"
-                android:text="Already have an account? Log in"
+                android:text="@string/already_have_an_account_log_in"
                 android:textColor="@color/flag_red"
                 android:textStyle="bold" />
         </LinearLayout>

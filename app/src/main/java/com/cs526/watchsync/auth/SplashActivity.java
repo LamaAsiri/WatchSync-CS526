@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cs526.watchsync.data.Prefs;
 import com.cs526.watchsync.main.MainActivity;
+import com.cs526.watchsync.util.Lang;
 import com.google.firebase.auth.FirebaseAuth;
 
 /** First screen: already logged in -> Home, otherwise -> Welcome. */
@@ -14,6 +15,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Prefs.applyTheme(this); // light or dark, saved in SharedPreferences
+        Lang.apply(this);       // English or Arabic, saved in SharedPreferences
         super.onCreate(savedInstanceState);
         boolean loggedIn = FirebaseAuth.getInstance().getCurrentUser() != null;
         startActivity(new Intent(this, loggedIn ? MainActivity.class : WelcomeActivity.class));

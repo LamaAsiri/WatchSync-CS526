@@ -1,5 +1,7 @@
 package com.cs526.watchsync.groups;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -31,7 +33,7 @@ public class CreateGroupActivity extends BaseActivity {
         btnCreate = findViewById(R.id.btnCreate);
         btnCreate.setOnClickListener(v -> {
             groupName = etName.getText().toString().trim();
-            if (groupName.isEmpty()) { Ui.toast(this, "Give your group a name"); return; }
+            if (groupName.isEmpty()) { Ui.toast(this, Lang.s(R.string.err_group_name)); return; }
             btnCreate.setEnabled(false);
             tryCode(0);
         });
@@ -51,11 +53,11 @@ public class CreateGroupActivity extends BaseActivity {
             updates.put("users/" + uid + "/groups/" + code, true);
             Db.root().updateChildren(updates)
                     .addOnSuccessListener(x -> {
-                        LocalDb.get(this).logActivity("group", "Created the group " + groupName);
+                        LocalDb.get(this).logActivity("group", Lang.s(R.string.log_created_group, groupName));
                         showCode(code);
                     })
-                    .addOnFailureListener(e -> { btnCreate.setEnabled(true); Ui.toast(this, "Couldn't create: " + e.getMessage()); });
-        }).addOnFailureListener(e -> { btnCreate.setEnabled(true); Ui.toast(this, "No connection: " + e.getMessage()); });
+                    .addOnFailureListener(e -> { btnCreate.setEnabled(true); Ui.toast(this, Lang.s(R.string.err_couldnt_create, e.getMessage())); });
+        }).addOnFailureListener(e -> { btnCreate.setEnabled(true); Ui.toast(this, Lang.s(R.string.err_no_connection, e.getMessage())); });
     }
 
     private void showCode(String code) {

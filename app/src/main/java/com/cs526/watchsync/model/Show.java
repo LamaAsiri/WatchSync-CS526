@@ -1,5 +1,8 @@
 package com.cs526.watchsync.model;
 
+import com.cs526.watchsync.util.Lang;
+import com.cs526.watchsync.R;
+
 import android.content.Intent;
 
 import com.cs526.watchsync.util.EpisodeMath;
@@ -29,21 +32,21 @@ public class Show {
     }
 
     public String typeLabel() {
-        if (movie()) return "Movie";
-        return anime ? "Anime" : "TV show";
+        if (movie()) return Lang.s(R.string.type_movie);
+        return Lang.s(anime ? R.string.type_anime : R.string.type_tv);
     }
 
     public String summary() {
         StringBuilder sb = new StringBuilder(typeLabel());
         if (!year.isEmpty()) sb.append(" · ").append(year);
-        if (!movie() && totalEpisodes > 0) sb.append(" · ").append(totalEpisodes).append(" eps");
+        if (!movie() && totalEpisodes > 0) sb.append(" · ").append(Lang.s(R.string.n_eps, totalEpisodes));
         return sb.toString();
     }
 
     public String progressLabel() {
-        if (movie()) return progress >= 1 ? "Watched" : "Not watched yet";
-        if (progress <= 0) return "Not started";
-        if (totalEpisodes > 0 && progress >= totalEpisodes) return "Finished · " + totalEpisodes + "/" + totalEpisodes;
+        if (movie()) return Lang.s(progress >= 1 ? R.string.watched : R.string.not_watched_yet);
+        if (progress <= 0) return Lang.s(R.string.not_started);
+        if (totalEpisodes > 0 && progress >= totalEpisodes) return Lang.s(R.string.finished_progress, totalEpisodes);
         return EpisodeMath.label(progress, seasonCounts, false) + " · " + progress + "/" + totalEpisodes;
     }
 

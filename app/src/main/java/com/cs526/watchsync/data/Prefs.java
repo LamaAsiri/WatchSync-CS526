@@ -49,9 +49,19 @@ public final class Prefs {
                 ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
     }
 
-    /** Log out: forget the account, but keep the dark mode choice (it belongs to the phone). */
+    /** "" = follow the phone, "en" = English, "ar" = Arabic. */
+    public static String language(Context c) {
+        return p(c).getString("language", "");
+    }
+
+    public static void setLanguage(Context c, String tag) {
+        p(c).edit().putString("language", tag).apply();
+    }
+
+    /** Log out: forget the account, but keep the dark mode and language choices (they belong to the phone). */
     public static void clear(Context c) {
         boolean dark = darkMode(c);
-        p(c).edit().clear().putBoolean("dark_mode", dark).apply();
+        String language = language(c);
+        p(c).edit().clear().putBoolean("dark_mode", dark).putString("language", language).apply();
     }
 }

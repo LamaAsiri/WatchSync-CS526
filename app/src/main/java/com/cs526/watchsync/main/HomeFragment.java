@@ -1,5 +1,7 @@
 package com.cs526.watchsync.main;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -63,15 +65,15 @@ public class HomeFragment extends Fragment {
 
         adapter = new ShowAdapter((show, h) -> {
             int next = show.progress + 1;
-            h.subtitle.setText("Next: " + EpisodeMath.label(next, show.seasonCounts, false)
-                    + " · " + (show.totalEpisodes - show.progress) + " left");
+            h.subtitle.setText(Lang.s(R.string.next_ep_left, EpisodeMath.label(next, show.seasonCounts, false),
+                    show.totalEpisodes - show.progress));
             h.showProgress(show);
-            h.showAction("✓ Watched");
+            h.showAction(Lang.s(R.string.action_watched));
         });
         adapter.setOnClick(show -> ShowDetailActivity.open(requireContext(), show));
         adapter.setOnAction(show -> {
             ProgressStore.save(requireContext(), show, show.progress + 1);
-            Ui.toast(requireContext(), show.title + ": " + EpisodeMath.label(show.progress, show.seasonCounts, false) + " watched");
+            Ui.toast(requireContext(), Lang.s(R.string.toast_ep_watched, show.title, EpisodeMath.label(show.progress, show.seasonCounts, false)));
             loadUpNext();
         });
 
@@ -89,7 +91,7 @@ public class HomeFragment extends Fragment {
         super.onResume();
         String name = Prefs.name(requireContext());
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        tvHello.setText(hour < 12 ? "Good morning," : hour < 18 ? "Good afternoon," : "Good evening,");
+        tvHello.setText(Lang.s(hour < 12 ? R.string.good_morning : hour < 18 ? R.string.good_afternoon : R.string.good_evening));
         tvName.setText(Ui.firstName(name));
         Ui.avatar(tvAvatar, name, Prefs.color(requireContext()));
         loadUpNext();
@@ -102,7 +104,7 @@ public class HomeFragment extends Fragment {
         layoutActivity.removeAllViews();
         List<LocalDb.ActivityItem> items = LocalDb.get(requireContext()).recentActivity(5);
         if (items.isEmpty()) {
-            layoutActivity.addView(activityLine("Nothing yet. Add a show or join a group to get started.", ""));
+            layoutActivity.addView(activityLine(Lang.s(R.string.activity_empty), ""));
             return;
         }
         for (LocalDb.ActivityItem a : items) {
@@ -175,9 +177,9 @@ public class HomeFragment extends Fragment {
 
     private void showParty(Party p, String groupName, String code) {
         cardParty.setVisibility(View.VISIBLE);
-        tvPartyLabel.setText("NEXT WATCH PARTY · " + groupName.toUpperCase());
+        tvPartyLabel.setText(Lang.s(R.string.next_party_label, groupName.toUpperCase(Lang.locale())));
         tvPartyTitle.setText(p.showTitle + " · " + p.episodeLabel());
-        tvPartySub.setText(Ui.when(p.time) + " · " + p.goingCount() + " going");
+        tvPartySub.setText(Lang.s(R.string.party_sub_when_going, Ui.when(p.time), p.goingCount()));
         cardParty.setOnClickListener(v -> PartyDetailActivity.open(requireContext(), code, p.id));
 
         // Show the phone's copy first, then check Firebase (progress may have been saved
@@ -194,8 +196,8 @@ public class HomeFragment extends Fragment {
         int catchUp = p.ended() ? 0 : p.episodesToCatchUp(mine);
         if (catchUp > 0) {
             tvSpoiler.setVisibility(View.VISIBLE);
-            tvSpoiler.setText("Spoiler alert: watch " + EpisodeMath.count(catchUp) + " of " + p.showTitle
-                    + " (up to " + EpisodeMath.label(p.episode - 1, p.seasonCounts, false) + ") before the party.");
+            tvSpoiler.setText(Lang.s(R.string.spoiler_alert_home, EpisodeMath.count(catchUp), p.showTitle,
+                    EpisodeMath.label(p.episode - 1, p.seasonCounts, false)));
             tvSpoiler.setOnClickListener(v -> ShowDetailActivity.open(requireContext(), mineOrParty(p)));
         } else {
             tvSpoiler.setVisibility(View.GONE);

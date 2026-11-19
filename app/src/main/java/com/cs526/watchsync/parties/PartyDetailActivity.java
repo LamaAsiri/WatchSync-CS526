@@ -1,5 +1,7 @@
 package com.cs526.watchsync.parties;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -67,7 +69,7 @@ public class PartyDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_detail);
-        setupToolbar("Watch party");
+        setupToolbar(Lang.s(R.string.title_watch_party));
         code = getIntent().getStringExtra(GroupActivity.EXTRA_CODE);
         partyId = getIntent().getStringExtra(EXTRA_PARTY);
 
@@ -108,7 +110,7 @@ public class PartyDetailActivity extends BaseActivity {
         if (!ps.exists()) {
             LocalDb.get(this).deleteParty(partyId);
             ReminderScheduler.cancel(this, partyId);
-            Ui.toast(this, "This party was deleted");
+            Ui.toast(this, Lang.s(R.string.party_deleted));
             finish();
             return;
         }
@@ -124,25 +126,25 @@ public class PartyDetailActivity extends BaseActivity {
 
         setToolbarTitle(Snap.str(g.child("name")));
         ((TextView) findViewById(R.id.tvShowTitle)).setText(party.showTitle);
-        ((TextView) findViewById(R.id.tvEpisode)).setText(party.movie() ? "Movie night"
-                : party.episodeLabel() + " · episode " + party.episode + " of " + party.totalEpisodes);
-        ((TextView) findViewById(R.id.tvWhen)).setText(Ui.when(party.time) + " · planned by " + party.createdByName);
-        ((TextView) findViewById(R.id.tvCountdown)).setText(ended ? "This party has ended"
-                : party.live() ? "Happening now" : Ui.countdown(party.time));
+        ((TextView) findViewById(R.id.tvEpisode)).setText(party.movie() ? Lang.s(R.string.movie_night)
+                : Lang.s(R.string.episode_x_of_y, party.episodeLabel(), party.episode, party.totalEpisodes));
+        ((TextView) findViewById(R.id.tvWhen)).setText(Lang.s(R.string.planned_by, Ui.when(party.time), party.createdByName));
+        ((TextView) findViewById(R.id.tvCountdown)).setText(ended ? Lang.s(R.string.party_has_ended)
+                : party.live() ? Lang.s(R.string.happening_now) : Ui.countdown(party.time));
 
         TextView note = findViewById(R.id.tvNote);
         note.setVisibility(party.note.isEmpty() ? View.GONE : View.VISIBLE);
-        note.setText("Note: " + party.note);
+        note.setText(Lang.s(R.string.note_x, party.note));
 
         // RSVP buttons
         findViewById(R.id.layoutRsvp).setVisibility(party.upcoming() ? View.VISIBLE : View.GONE);
-        ((MaterialButton) findViewById(R.id.btnGoing)).setText("going".equals(mine) ? "✓ You're in" : "I'm in");
-        ((MaterialButton) findViewById(R.id.btnNotGoing)).setText("no".equals(mine) ? "✓ Not going" : "Can't go");
+        ((MaterialButton) findViewById(R.id.btnGoing)).setText("going".equals(mine) ? Lang.s(R.string.btn_youre_in) : Lang.s(R.string.im_in));
+        ((MaterialButton) findViewById(R.id.btnNotGoing)).setText("no".equals(mine) ? Lang.s(R.string.btn_not_going) : Lang.s(R.string.cant_go));
 
         boolean canDelete = admin || party.createdBy.equals(Db.uid());
         findViewById(R.id.btnDelete).setVisibility(canDelete ? View.VISIBLE : View.GONE);
 
-        ((TextView) findViewById(R.id.tvPeopleTitle)).setText((ended ? "Who went · " : "Who's coming · ") + party.goingCount());
+        ((TextView) findViewById(R.id.tvPeopleTitle)).setText(Lang.s(ended ? R.string.who_went_n : R.string.whos_coming_n, party.goingCount()));
 
         loadProgress();
 
@@ -181,11 +183,10 @@ public class PartyDetailActivity extends BaseActivity {
             card.setVisibility(View.VISIBLE);
             String from = EpisodeMath.label(mine + 1, party.seasonCounts, false);
             String to = EpisodeMath.label(party.episode - 1, party.seasonCounts, false);
-            ((TextView) findViewById(R.id.tvSpoiler)).setText("Spoiler zone! You're "
-                    + (mine == 0 ? "not started yet" : "on " + EpisodeMath.label(mine, party.seasonCounts, false))
-                    + ". Watch " + EpisodeMath.count(catchUp)
-                    + (catchUp == 1 ? " (" + to + ")" : " (" + from + " to " + to + ")")
-                    + " before the party so it doesn't spoil anything.");
+            ((TextView) findViewById(R.id.tvSpoiler)).setText(Lang.s(R.string.spoiler_zone,
+                    mine == 0 ? Lang.s(R.string.not_started_yet) : Lang.s(R.string.on_x, EpisodeMath.label(mine, party.seasonCounts, false)),
+                    EpisodeMath.count(catchUp),
+                    catchUp == 1 ? to : Lang.s(R.string.from_to, from, to)));
         } else {
             card.setVisibility(View.GONE);
         }
@@ -196,19 +197,19 @@ public class PartyDetailActivity extends BaseActivity {
             RowAdapter.Row r = new RowAdapter.Row();
             r.name = m.name;
             r.color = m.color;
-            r.title = m.uid.equals(Db.uid()) ? m.name + " (you)" : m.name;
+            r.title = m.uid.equals(Db.uid()) ? Lang.s(R.string.name_you, m.name) : m.name;
             String answer = party.rsvp.get(m.uid);
-            r.sub = "going".equals(answer) ? "Going" : "no".equals(answer) ? "Not going" : "No answer yet";
+            r.sub = Lang.s("going".equals(answer) ? R.string.going : "no".equals(answer) ? R.string.not_going : R.string.no_answer_yet);
 
             Integer p = progress.get(m.uid);
             if (p != null && !party.movie()) {
                 int behind = party.episodesToCatchUp(p);
                 if (behind > 0) {
-                    r.badge = behind + " to catch up";
+                    r.badge = Lang.s(R.string.behind_catch_up, behind);
                     r.badgeBg = Ui.RED_TINT;
                     r.badgeFg = Ui.LAVA;
                 } else {
-                    r.badge = "Ready";
+                    r.badge = Lang.s(R.string.ready);
                     r.badgeBg = Ui.STEEL_TINT;
                     r.badgeFg = Ui.INK;
                 }
@@ -223,8 +224,8 @@ public class PartyDetailActivity extends BaseActivity {
         ref.child("parties").child(partyId).child("rsvp").child(Db.uid()).setValue(answer);
         boolean going = "going".equals(answer);
         LocalDb.get(this).saveParty(code, party, going);
-        LocalDb.get(this).logActivity("party", (going ? "Going to " : "Can't go to ")
-                + party.showTitle + " · " + party.episodeLabel());
+        LocalDb.get(this).logActivity("party", Lang.s(going ? R.string.log_going_to : R.string.log_cant_go_to,
+                party.showTitle + " · " + party.episodeLabel()));
         if (going) {
             ReminderScheduler.schedule(this, partyId, party.showTitle + " · " + party.episodeLabel(), party.time);
         } else {
@@ -234,27 +235,27 @@ public class PartyDetailActivity extends BaseActivity {
 
     private void confirmDelete() {
         new AlertDialog.Builder(this)
-                .setTitle("Delete this party?")
-                .setMessage("Everyone in the group will stop seeing it.")
-                .setPositiveButton("Delete", (d, w) -> {
+                .setTitle(Lang.s(R.string.delete_party_q))
+                .setMessage(Lang.s(R.string.delete_party_msg))
+                .setPositiveButton(Lang.s(R.string.delete), (d, w) -> {
                     ReminderScheduler.cancel(this, partyId);
                     LocalDb.get(this).deleteParty(partyId);
                     ref.child("parties").child(partyId).removeValue();
                     finish();
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(Lang.s(R.string.cancel), null)
                 .show();
     }
 
     private void askCheckIn() {
-        String what = party.movie() ? "the movie" : party.episodeLabel();
+        String what = party.movie() ? Lang.s(R.string.the_movie) : party.episodeLabel();
         new AlertDialog.Builder(this)
-                .setTitle("Did you watch " + what + " with the group?")
-                .setMessage(party.movie() ? "If yes, we'll mark the movie as watched."
-                        : "If yes, we'll move your progress to " + party.episodeLabel() + " so your spoiler radar stays right.")
+                .setTitle(Lang.s(R.string.did_you_watch, what))
+                .setMessage(party.movie() ? Lang.s(R.string.checkin_movie_msg)
+                        : Lang.s(R.string.checkin_msg, party.episodeLabel()))
                 .setCancelable(false)
-                .setPositiveButton("Yes, I watched it", (d, w) -> checkIn(true))
-                .setNegativeButton("No, I missed it", (d, w) -> checkIn(false))
+                .setPositiveButton(Lang.s(R.string.yes_watched_it), (d, w) -> checkIn(true))
+                .setNegativeButton(Lang.s(R.string.no_missed_it), (d, w) -> checkIn(false))
                 .show();
     }
 
@@ -264,7 +265,7 @@ public class PartyDetailActivity extends BaseActivity {
         Show s = myShow();
         int newProgress = Math.max(s.progress, party.movie() ? 1 : party.episode);
         ProgressStore.save(this, s, newProgress);
-        Ui.toast(this, "Progress updated: " + s.progressLabel());
+        Ui.toast(this, Lang.s(R.string.progress_updated, s.progressLabel()));
     }
 
     /** My copy of the show (keeps my progress), or the party's info if I never added it. */

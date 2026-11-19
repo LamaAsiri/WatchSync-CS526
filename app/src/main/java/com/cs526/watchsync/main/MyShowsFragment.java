@@ -1,5 +1,7 @@
 package com.cs526.watchsync.main;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -57,10 +59,10 @@ public class MyShowsFragment extends Fragment {
         });
         adapter.setOnClick(show -> ShowDetailActivity.open(requireContext(), show));
         adapter.setOnLongClick(show -> new AlertDialog.Builder(requireContext())
-                .setTitle("Remove " + show.title + "?")
-                .setMessage("It will be removed from My Shows with your progress.")
-                .setPositiveButton("Remove", (d, w) -> { ProgressStore.remove(requireContext(), show.tmdbId); render(); })
-                .setNegativeButton("Cancel", null)
+                .setTitle(Lang.s(R.string.remove_x, show.title))
+                .setMessage(Lang.s(R.string.remove_from_my_shows_msg))
+                .setPositiveButton(Lang.s(R.string.remove), (d, w) -> { ProgressStore.remove(requireContext(), show.tmdbId); render(); })
+                .setNegativeButton(Lang.s(R.string.cancel), null)
                 .show());
 
         RecyclerView rv = v.findViewById(R.id.rvShows);

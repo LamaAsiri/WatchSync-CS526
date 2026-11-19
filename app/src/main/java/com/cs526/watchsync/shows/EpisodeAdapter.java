@@ -1,5 +1,7 @@
 package com.cs526.watchsync.shows;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +38,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.VH> {
         this.firstNumber = numberBefore;
         this.progress = progress;
         names.clear();
-        for (int i = 1; i <= count; i++) names.add("Episode " + i);
+        for (int i = 1; i <= count; i++) names.add(Lang.s(R.string.episode_n, i));
         notifyDataSetChanged();
     }
 
@@ -64,11 +66,11 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.VH> {
         int inSeason = position + 1;
         int number = firstNumber + inSeason;
         boolean watched = number <= progress;
-        h.number.setText("E" + inSeason);
+        h.number.setText(Lang.s(R.string.ep_short, inSeason));
         h.name.setText(names.get(position));
         h.check.setBackgroundTintList(ColorStateList.valueOf(watched ? Ui.RED : Ui.LINE));
         h.check.setImageTintList(ColorStateList.valueOf(watched ? 0xFFFFFFFF : Ui.MUTED));
-        h.check.setContentDescription(watched ? "Watched" : "Not watched");
+        h.check.setContentDescription(Lang.s(watched ? R.string.watched : R.string.not_watched));
         h.itemView.setOnClickListener(v -> listener.onTap(number));
     }
 

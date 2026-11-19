@@ -1,5 +1,7 @@
 package com.cs526.watchsync.reminders;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -26,7 +28,7 @@ public class PartyReminderReceiver extends BroadcastReceiver {
         NotificationManager nm = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
         if (nm == null) return;
         if (Build.VERSION.SDK_INT >= 26) {
-            nm.createNotificationChannel(new NotificationChannel(CHANNEL, "Watch party reminders",
+            nm.createNotificationChannel(new NotificationChannel(CHANNEL, Lang.s(R.string.channel_party_reminders),
                     NotificationManager.IMPORTANCE_DEFAULT));
         }
         if (Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(c,
@@ -39,8 +41,8 @@ public class PartyReminderReceiver extends BroadcastReceiver {
         nm.notify((int) (System.currentTimeMillis() % Integer.MAX_VALUE),
                 new NotificationCompat.Builder(c, CHANNEL)
                         .setSmallIcon(R.drawable.ic_tv)
-                        .setContentTitle("Watch party in 1 hour")
-                        .setContentText(text == null || text.isEmpty() ? "Your watch party starts soon" : text)
+                        .setContentTitle(Lang.s(R.string.notif_party_title))
+                        .setContentText(text == null || text.isEmpty() ? Lang.s(R.string.notif_party_default) : text)
                         .setContentIntent(open)
                         .setAutoCancel(true)
                         .build());

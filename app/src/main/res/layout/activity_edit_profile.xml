@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:labelFor="@id/etName" android:text="Display name" />
+        <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:labelFor="@id/etName" android:text="@string/display_name" />
         <EditText android:id="@+id/etName" style="@style/Field" android:autofillHints="name" android:inputType="textPersonName|textCapWords" />
 
         <TextView
@@ -34,6 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:text="Save changes" />
+            android:text="@string/save_changes" />
     </LinearLayout>
 </LinearLayout>

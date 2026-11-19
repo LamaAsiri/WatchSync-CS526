@@ -3,8 +3,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/poster_open_web"
-        android:title="Open on TMDB website" />
+        android:title="@string/open_on_tmdb_website" />
     <item
         android:id="@+id/poster_share"
-        android:title="Share this show" />
+        android:title="@string/share_this_show" />
 </menu>
