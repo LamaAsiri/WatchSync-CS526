@@ -77,14 +77,30 @@ groups/{code}               name, adminUid, createdAt
   parties/{id}              tmdbId, showTitle, episode, time, note, createdBy, rsvp/{uid}, checkedIn/{uid}
 ```
 
-## SQLite (على الجوال)
-جدول `my_shows`: نسخة من My Shows عشان الشاشات تفتح بسرعة وتشتغل بدون نت.
+## SQLite (على الجوال) — `watchsync.db`
+| الجدول | وش فيه | وين يُستخدم |
+|---|---|---|
+| `my_shows` | نسخة من My Shows مع التقدم | الشاشات تفتح بسرعة وتشتغل بدون نت |
+| `parties` | جلسات كل القروبات وهل أنا رايحة | `BootReceiver` يرجّع التذكيرات بعد إعادة تشغيل الجوال |
+| `recent_activity` | آخر نشاطاتي (إضافة مسلسل، حلقة، قروب، تصويت، جلسة) | قسم Recent activity في Home |
 
 ## SharedPreferences
-اسم المستخدم ولونه، وإعداد تذكير الجلسات.
+اسم المستخدم ولونه، وإعداد تذكير الجلسات، والوضع الليلي.
 
-## AlarmManager + BroadcastReceiver
-تذكير قبل الجلسة بساعة (`reminders/ReminderScheduler` + `PartyReminderReceiver`).
+## AlarmManager + BroadcastReceivers
+- تذكير قبل الجلسة بساعة (`reminders/ReminderScheduler` + `PartyReminderReceiver`).
+- `BootReceiver`: يستقبل `ACTION_BOOT_COMPLETED` (رسالة من النظام) ويرجّع التذكيرات من جدول `parties`.
+
+## Intents
+- صريحة (Explicit): التنقل بين كل الشاشات مع `putExtra`.
+- ضمنية (Implicit): `ACTION_SEND` لمشاركة كود القروب أو مسلسل، و`ACTION_VIEW` لفتح صفحة المسلسل في المتصفح.
+
+## Menus
+- Options menu في شاشة المسلسل: Share، Open on TMDB website، Remove from My Shows.
+- Context menu: ضغطة مطوّلة على البوستر.
+
+## الوضع الليلي
+من Profile ← Dark mode. الألوان في `res/values-night/colors.xml`.
 
 ---
 

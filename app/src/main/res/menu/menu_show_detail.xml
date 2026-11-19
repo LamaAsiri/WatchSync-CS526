@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Options menu in the app bar of the show screen -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share"
+        android:title="Share"
+        app:iconTint="@color/ink"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_open_web"
+        android:title="Open on TMDB website"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_remove"
+        android:title="Remove from My Shows"
+        app:showAsAction="never" />
+</menu>

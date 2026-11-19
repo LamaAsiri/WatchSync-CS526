@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Floating context menu: long press on the poster -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/poster_open_web"
+        android:title="Open on TMDB website" />
+    <item
+        android:id="@+id/poster_share"
+        android:title="Share this show" />
+</menu>

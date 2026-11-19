@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.cs526.watchsync.BaseActivity;
 import com.cs526.watchsync.R;
 import com.cs526.watchsync.data.Db;
+import com.cs526.watchsync.data.LocalDb;
 import com.cs526.watchsync.data.Prefs;
 import com.cs526.watchsync.model.Member;
 import com.cs526.watchsync.util.Snap;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 public class JoinGroupActivity extends BaseActivity {
     private String foundCode;
+    private String foundName = "";
     private boolean alreadyMember;
 
     @Override
@@ -46,7 +48,8 @@ public class JoinGroupActivity extends BaseActivity {
                 foundCode = code;
                 String adminName = Snap.str(g.child("members").child(Snap.str(g.child("adminUid"))).child("name"));
                 String now = Snap.str(g.child("nowWatching/title"));
-                tvName.setText(Snap.str(g.child("name")));
+                foundName = Snap.str(g.child("name"));
+                tvName.setText(foundName);
                 tvInfo.setText("Admin: " + adminName + " · " + g.child("members").getChildrenCount() + " members"
                         + (now.isEmpty() ? "" : " · watching " + now));
                 card.setVisibility(View.VISIBLE);
@@ -68,6 +71,7 @@ public class JoinGroupActivity extends BaseActivity {
             updates.put("groups/" + foundCode + "/members/" + uid, Member.map(Prefs.name(this), Prefs.color(this)));
             updates.put("users/" + uid + "/groups/" + foundCode, true);
             Db.root().updateChildren(updates).addOnSuccessListener(x -> {
+                LocalDb.get(this).logActivity("group", "Joined the group " + foundName);
                 GroupActivity.open(this, foundCode);
                 finish();
             }).addOnFailureListener(e -> Ui.toast(this, "Couldn't join: " + e.getMessage()));

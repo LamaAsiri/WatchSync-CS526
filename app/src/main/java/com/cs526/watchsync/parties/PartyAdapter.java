@@ -47,7 +47,7 @@ public class PartyAdapter extends RecyclerView.Adapter<PartyAdapter.VH> {
     @Override
     public void onBindViewHolder(@NonNull VH h, int position) {
         Party p = items.get(position);
-        boolean upcoming = p.time > System.currentTimeMillis();
+        boolean upcoming = !p.ended();
 
         h.day.setText(Ui.format("EEE", p.time).toUpperCase());
         h.date.setText(Ui.format("d", p.time));

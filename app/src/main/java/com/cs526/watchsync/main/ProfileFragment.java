@@ -46,6 +46,14 @@ public class ProfileFragment extends Fragment {
         sw.setChecked(Prefs.reminders(requireContext()));
         sw.setOnCheckedChangeListener((button, on) -> Prefs.setReminders(requireContext(), on));
 
+        MaterialSwitch swDark = v.findViewById(R.id.switchDarkMode);
+        swDark.setChecked(Prefs.darkMode(requireContext()));
+        swDark.setOnCheckedChangeListener((button, on) -> {
+            if (on == Prefs.darkMode(requireContext())) return;
+            Prefs.setDarkMode(requireContext(), on);
+            Prefs.applyTheme(requireContext()); // the screen redraws itself in the new colours
+        });
+
         v.findViewById(R.id.btnEditProfile).setOnClickListener(x -> startActivity(new Intent(requireContext(), EditProfileActivity.class)));
         v.findViewById(R.id.btnLogout).setOnClickListener(x -> logout());
     }
