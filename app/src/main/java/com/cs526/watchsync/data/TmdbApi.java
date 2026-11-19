@@ -1,5 +1,8 @@
 package com.cs526.watchsync.data;
 
+import com.cs526.watchsync.util.Lang;
+import com.cs526.watchsync.R;
+
 import android.content.Context;
 import android.net.Uri;
 
@@ -91,9 +94,23 @@ public class TmdbApi {
         }, error -> callback.onError(errorText(error))));
     }
 
+    /** "&language=ar" when the app is in Arabic, so TMDB sends Arabic text where it has it. */
+    private static String language() {
+        return Lang.arabic() ? "&language=ar" : "";
+    }
+
+    /** The show's description in Arabic (empty if TMDB has no Arabic translation). */
+    public void loadArabicOverview(Show show, Callback<String> callback) {
+        if (show.tmdbId <= 0) { callback.onResult(""); return; }
+        String url = BASE_URL + "/" + (show.movie() ? "movie/" : "tv/") + show.tmdbId + "?api_key=" + apiKey + "&language=ar";
+        queue.add(new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> callback.onResult(text(response, "overview")),
+                error -> callback.onError(errorText(error))));
+    }
+
     /** Episode names of one season (season is 1-based). */
     public void loadEpisodeNames(int tmdbId, int season, Callback<List<String>> callback) {
-        String url = BASE_URL + "/tv/" + tmdbId + "/season/" + season + "?api_key=" + apiKey;
+        String url = BASE_URL + "/tv/" + tmdbId + "/season/" + season + "?api_key=" + apiKey + language();
         queue.add(new JsonObjectRequest(Request.Method.GET, url, null, response -> {
             List<String> names = new ArrayList<>();
             JSONArray eps = response.optJSONArray("episodes");
@@ -137,8 +154,8 @@ public class TmdbApi {
     private static String errorText(Exception e) {
         if (e instanceof com.android.volley.VolleyError) {
             com.android.volley.NetworkResponse r = ((com.android.volley.VolleyError) e).networkResponse;
-            if (r != null && r.statusCode == 401) return "TMDB key is missing or wrong (check secrets.properties)";
+            if (r != null && r.statusCode == 401) return Lang.s(R.string.tmdb_key_error);
         }
-        return "Couldn't reach TMDB. Check your internet.";
+        return Lang.s(R.string.tmdb_unreachable);
     }
 }

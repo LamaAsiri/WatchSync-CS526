@@ -1,5 +1,7 @@
 package com.cs526.watchsync.main;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.cs526.watchsync.R;
@@ -40,7 +43,7 @@ public class ProfileFragment extends Fragment {
         tvStatGroups = v.findViewById(R.id.tvStatGroups);
         tvStatShows = v.findViewById(R.id.tvStatShows);
         tvStatEpisodes = v.findViewById(R.id.tvStatEpisodes);
-        ((TextView) v.findViewById(R.id.tvAbout)).setText("WatchSync · CS 526 project\n" + getString(R.string.tmdb_notice));
+        ((TextView) v.findViewById(R.id.tvAbout)).setText(Lang.s(R.string.about_project) + "\n" + Lang.s(R.string.tmdb_notice));
 
         MaterialSwitch sw = v.findViewById(R.id.switchReminders);
         sw.setChecked(Prefs.reminders(requireContext()));
@@ -53,6 +56,10 @@ public class ProfileFragment extends Fragment {
             Prefs.setDarkMode(requireContext(), on);
             Prefs.applyTheme(requireContext()); // the screen redraws itself in the new colours
         });
+
+        TextView btnLanguage = v.findViewById(R.id.btnLanguage);
+        btnLanguage.setText(Lang.s(R.string.language_value, languageName(Prefs.language(requireContext()))));
+        btnLanguage.setOnClickListener(x -> pickLanguage());
 
         v.findViewById(R.id.btnEditProfile).setOnClickListener(x -> startActivity(new Intent(requireContext(), EditProfileActivity.class)));
         v.findViewById(R.id.btnLogout).setOnClickListener(x -> logout());
@@ -74,6 +81,29 @@ public class ProfileFragment extends Fragment {
         Db.me().child("groups").get().addOnSuccessListener(g -> {
             if (isAdded()) tvStatGroups.setText(String.valueOf(g.getChildrenCount()));
         });
+    }
+
+    /** Phone language / English / العربية. Saved in SharedPreferences, then the app redraws in that language. */
+    private void pickLanguage() {
+        String[] tags = {"", "en", "ar"};
+        String[] names = {Lang.s(R.string.language_system), Lang.s(R.string.language_english), Lang.s(R.string.language_arabic)};
+        int current = java.util.Arrays.asList(tags).indexOf(Prefs.language(requireContext()));
+        new AlertDialog.Builder(requireContext())
+                .setTitle(Lang.s(R.string.language))
+                .setSingleChoiceItems(names, Math.max(0, current), (d, which) -> {
+                    d.dismiss();
+                    if (tags[which].equals(Prefs.language(requireContext()))) return;
+                    Prefs.setLanguage(requireContext(), tags[which]);
+                    Lang.apply(requireContext()); // the screens are recreated in the new language
+                })
+                .setNegativeButton(Lang.s(R.string.cancel), null)
+                .show();
+    }
+
+    private String languageName(String tag) {
+        if (tag.equals("en")) return Lang.s(R.string.language_english);
+        if (tag.equals("ar")) return Lang.s(R.string.language_arabic);
+        return Lang.s(R.string.language_system);
     }
 
     private void logout() {

@@ -19,7 +19,7 @@
             android:id="@+id/etSearch"
             style="@style/Field"
             android:drawablePadding="10dp"
-            android:hint="Search movies, TV shows, anime"
+            android:hint="@string/search_movies_tv_shows_anime"
             android:imeOptions="actionSearch"
             android:importantForAutofill="no"
             android:inputType="text"
@@ -34,10 +34,10 @@
             app:selectionRequired="true"
             app:singleSelection="true">
 
-            <com.google.android.material.chip.Chip android:id="@+id/chipAll" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:text="All" />
-            <com.google.android.material.chip.Chip android:id="@+id/chipAnime" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Anime" />
-            <com.google.android.material.chip.Chip android:id="@+id/chipTv" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TV shows" />
-            <com.google.android.material.chip.Chip android:id="@+id/chipMovie" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Movies" />
+            <com.google.android.material.chip.Chip android:id="@+id/chipAll" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:text="@string/all" />
+            <com.google.android.material.chip.Chip android:id="@+id/chipAnime" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/anime" />
+            <com.google.android.material.chip.Chip android:id="@+id/chipTv" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/tv_shows" />
+            <com.google.android.material.chip.Chip android:id="@+id/chipMovie" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/movies" />
         </com.google.android.material.chip.ChipGroup>
 
         <ProgressBar
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="Type at least 2 letters to search." />
+            android:text="@string/type_at_least_2_letters_to" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvResults"
@@ -69,6 +69,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Can't find it? Add manually" />
+            android:text="@string/cant_find_it_add_manually" />
     </LinearLayout>
 </LinearLayout>

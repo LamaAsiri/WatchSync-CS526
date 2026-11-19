@@ -1,5 +1,7 @@
 package com.cs526.watchsync.groups;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,23 +47,23 @@ public class GroupWatchlistActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_watchlist);
-        setupToolbar("Watchlist");
+        setupToolbar(Lang.s(R.string.title_watchlist));
         code = getIntent().getStringExtra(GroupActivity.EXTRA_CODE);
 
         adapter = new ShowAdapter((show, h) -> {
             String sub = show.summary();
-            if (!show.addedByName.isEmpty()) sub += " · by " + show.addedByName;
+            if (!show.addedByName.isEmpty()) sub += Lang.s(R.string.by_x, show.addedByName);
             h.subtitle.setText(sub);
-            if (inVote.contains(show.tmdbId)) h.showAction("In vote");
+            if (inVote.contains(show.tmdbId)) h.showAction(Lang.s(R.string.in_vote));
         });
         adapter.setOnClick(show -> ShowDetailActivity.open(this, show));
         adapter.setOnAction(show -> VoteActivity.open(this, code));
         adapter.setOnLongClick(show -> {
             if (!admin) return;
             new AlertDialog.Builder(this)
-                    .setTitle("Remove " + show.title + "?")
-                    .setPositiveButton("Remove", (d, w) -> ref.child("watchlist").child(String.valueOf(show.tmdbId)).removeValue())
-                    .setNegativeButton("Cancel", null)
+                    .setTitle(Lang.s(R.string.remove_x, show.title))
+                    .setPositiveButton(Lang.s(R.string.remove), (d, w) -> ref.child("watchlist").child(String.valueOf(show.tmdbId)).removeValue())
+                    .setNegativeButton(Lang.s(R.string.cancel), null)
                     .show();
         });
 

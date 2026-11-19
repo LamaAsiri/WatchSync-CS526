@@ -1,5 +1,7 @@
 package com.cs526.watchsync.auth;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -44,7 +46,7 @@ public class LoginActivity extends BaseActivity {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
         if (email.isEmpty() || password.isEmpty()) {
-            Ui.toast(this, "Enter your email and password");
+            Ui.toast(this, Lang.s(R.string.err_enter_email_password));
             return;
         }
         setLoading(true);
@@ -58,7 +60,7 @@ public class LoginActivity extends BaseActivity {
                 }))
                 .addOnFailureListener(e -> {
                     setLoading(false);
-                    Ui.toast(this, "Login failed: " + e.getMessage());
+                    Ui.toast(this, Lang.s(R.string.err_login_failed, e.getMessage()));
                 });
     }
 

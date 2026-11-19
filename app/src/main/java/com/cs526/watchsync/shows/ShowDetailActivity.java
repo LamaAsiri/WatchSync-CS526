@@ -1,5 +1,7 @@
 package com.cs526.watchsync.shows;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +42,7 @@ import java.util.List;
 public class ShowDetailActivity extends BaseActivity {
     private Show show;
     private boolean inLibrary;
+    private String arabicOverview = "";
     private TmdbApi api;
     private EpisodeAdapter episodes;
     private Spinner spSeason;
@@ -106,6 +109,19 @@ public class ShowDetailActivity extends BaseActivity {
         }
         refresh();
         setupSeasons();
+        if (Lang.arabic()) loadArabicOverview();
+    }
+
+    /** In Arabic, show TMDB's Arabic description when there is one (the English one stays saved). */
+    private void loadArabicOverview() {
+        api.loadArabicOverview(show, new TmdbApi.Callback<String>() {
+            @Override public void onResult(String overview) {
+                if (isFinishing() || overview.isEmpty()) return;
+                arabicOverview = overview;
+                refresh();
+            }
+            @Override public void onError(String message) { }
+        });
     }
 
     private void useSaved(Show saved) {
@@ -123,15 +139,16 @@ public class ShowDetailActivity extends BaseActivity {
 
     private void refresh() {
         tvMeta.setText(show.summary());
-        tvOverview.setText(show.overview);
-        tvOverview.setVisibility(show.overview.isEmpty() ? View.GONE : View.VISIBLE);
+        String overview = arabicOverview.isEmpty() ? show.overview : arabicOverview;
+        tvOverview.setText(overview);
+        tvOverview.setVisibility(overview.isEmpty() ? View.GONE : View.VISIBLE);
         tvProgress.setText(show.progressLabel());
         int max = show.movie() ? 1 : Math.max(1, show.totalEpisodes);
         pbProgress.setMax(max);
         pbProgress.setProgress(Math.min(show.progress, max));
         btnAddLibrary.setVisibility(inLibrary ? View.GONE : View.VISIBLE);
         btnMovieWatched.setVisibility(show.movie() ? View.VISIBLE : View.GONE);
-        btnMovieWatched.setText(show.progress >= 1 ? "Mark as not watched" : "✓ Mark as watched");
+        btnMovieWatched.setText(Lang.s(show.progress >= 1 ? R.string.mark_not_watched : R.string.mark_watched));
         invalidateOptionsMenu(); // "Remove" only shows once the show is in My Shows
     }
 
@@ -143,7 +160,7 @@ public class ShowDetailActivity extends BaseActivity {
         }
         layoutEpisodes.setVisibility(View.VISIBLE);
         List<String> labels = new ArrayList<>();
-        for (int i = 0; i < counts.length; i++) labels.add("Season " + (i + 1) + " (" + counts[i] + ")");
+        for (int i = 0; i < counts.length; i++) labels.add(Lang.s(R.string.season_n, i + 1, counts[i]));
         ArrayAdapter<String> a = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, labels);
         a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spSeason.setAdapter(a);
@@ -190,8 +207,8 @@ public class ShowDetailActivity extends BaseActivity {
 
     private void saveProgress(int newProgress) {
         ProgressStore.save(this, show, newProgress)
-                .addOnFailureListener(e -> Ui.toast(this, "Saved on this phone only: " + e.getMessage()));
-        if (!inLibrary) Ui.toast(this, show.title + " added to My Shows");
+                .addOnFailureListener(e -> Ui.toast(this, Lang.s(R.string.saved_phone_only, e.getMessage())));
+        if (!inLibrary) Ui.toast(this, Lang.s(R.string.added_to_my_shows, show.title));
         inLibrary = true;
         refresh();
         episodes.setProgress(show.progress);
@@ -262,13 +279,13 @@ public class ShowDetailActivity extends BaseActivity {
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Ui.toast(this, "No browser found on this phone");
+            Ui.toast(this, Lang.s(R.string.no_browser));
         }
     }
 
     /** Implicit intent (ACTION_SEND): share the show with any app (WhatsApp, Messages...). */
     private void shareShow() {
-        String text = "I'm watching " + show.title + " on WatchSync";
+        String text = Lang.s(R.string.share_watching, show.title);
         if (!show.movie() && show.progress > 0) {
             text += " (" + EpisodeMath.label(show.progress, show.seasonCounts, false) + ")";
         }
@@ -278,19 +295,19 @@ public class ShowDetailActivity extends BaseActivity {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, text);
-        startActivity(Intent.createChooser(intent, "Share show"));
+        startActivity(Intent.createChooser(intent, Lang.s(R.string.share_show)));
     }
 
     private void confirmRemove() {
         new AlertDialog.Builder(this)
-                .setTitle("Remove " + show.title + "?")
-                .setMessage("Your progress on this show will be deleted.")
-                .setPositiveButton("Remove", (d, w) -> {
+                .setTitle(Lang.s(R.string.remove_x, show.title))
+                .setMessage(Lang.s(R.string.remove_show_msg))
+                .setPositiveButton(Lang.s(R.string.remove), (d, w) -> {
                     ProgressStore.remove(this, show.tmdbId);
-                    Ui.toast(this, show.title + " removed");
+                    Ui.toast(this, Lang.s(R.string.x_removed, show.title));
                     finish();
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(Lang.s(R.string.cancel), null)
                 .show();
     }
 }

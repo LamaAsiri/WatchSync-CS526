@@ -1,5 +1,7 @@
 package com.cs526.watchsync.parties;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -56,7 +58,7 @@ public class SchedulePartyActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_party);
-        setupToolbar("Schedule a party");
+        setupToolbar(Lang.s(R.string.title_schedule_party));
         code = getIntent().getStringExtra(GroupActivity.EXTRA_CODE);
 
         tvEpisode = findViewById(R.id.tvEpisode);
@@ -86,7 +88,7 @@ public class SchedulePartyActivity extends BaseActivity {
     private void loadGroup() {
         Db.group(code).get().addOnSuccessListener(g -> {
             if (!g.hasChild("nowWatching")) {
-                Ui.toast(this, "The group has no show yet");
+                Ui.toast(this, Lang.s(R.string.group_no_show));
                 finish();
                 return;
             }
@@ -99,7 +101,7 @@ public class SchedulePartyActivity extends BaseActivity {
             setEpisode(show.movie() ? 1 : mine + 1); // default: my next episode
             findViewById(R.id.btnSchedule).setEnabled(true);
             loadProgress();
-        }).addOnFailureListener(e -> Ui.toast(this, "No connection: " + e.getMessage()));
+        }).addOnFailureListener(e -> Ui.toast(this, Lang.s(R.string.err_no_connection, e.getMessage())));
     }
 
     /** Reads every member's progress on this show (users/{uid}/shows/{tmdbId}/progress). */
@@ -117,8 +119,8 @@ public class SchedulePartyActivity extends BaseActivity {
         if (show == null) return;
         int max = show.movie() ? 1 : Math.max(1, show.totalEpisodes);
         episode = Math.max(1, Math.min(value, max));
-        tvEpisode.setText(show.movie() ? "Movie"
-                : EpisodeMath.label(episode, show.seasonCounts, false) + "  (" + episode + " of " + max + ")");
+        tvEpisode.setText(show.movie() ? Lang.s(R.string.movie)
+                : Lang.s(R.string.ep_of_max, EpisodeMath.label(episode, show.seasonCounts, false), episode, max));
         updateWarning();
     }
 
@@ -133,8 +135,8 @@ public class SchedulePartyActivity extends BaseActivity {
             Integer p = progress.get(m.uid);
             if (p == null) continue; // not loaded yet
             if (p < episode - 1) {
-                String who = m.uid.equals(Db.uid()) ? "you" : m.name;
-                behind.add(who + " (" + (p == 0 ? "not started" : "on " + EpisodeMath.label(p, show.seasonCounts, false)) + ")");
+                String who = m.uid.equals(Db.uid()) ? Lang.s(R.string.you_lower) : m.name;
+                behind.add(Lang.s(R.string.who_progress, who, p == 0 ? Lang.s(R.string.not_started_lower) : Lang.s(R.string.on_x, EpisodeMath.label(p, show.seasonCounts, false))));
             }
         }
         if (behind.isEmpty()) {
@@ -142,9 +144,9 @@ public class SchedulePartyActivity extends BaseActivity {
             return;
         }
         tvWarning.setVisibility(View.VISIBLE);
-        tvWarning.setText(behind.size() + (behind.size() == 1 ? " member hasn't" : " members haven't")
-                + " reached " + EpisodeMath.label(episode - 1, show.seasonCounts, false) + " yet: "
-                + android.text.TextUtils.join(", ", behind) + ". They'll see a catch-up warning.");
+        tvWarning.setText(Lang.s(R.string.warn_members_behind, Lang.plural(R.plurals.members_behind, behind.size()),
+                EpisodeMath.label(episode - 1, show.seasonCounts, false),
+                android.text.TextUtils.join(Lang.arabic() ? "، " : ", ", behind)));
     }
 
     private void pickDate() {
@@ -172,7 +174,7 @@ public class SchedulePartyActivity extends BaseActivity {
     private void save() {
         if (show == null) return;
         if (when.getTimeInMillis() <= System.currentTimeMillis()) {
-            Ui.toast(this, "Pick a time in the future");
+            Ui.toast(this, Lang.s(R.string.pick_future_time));
             return;
         }
         Party p = new Party();
@@ -197,13 +199,13 @@ public class SchedulePartyActivity extends BaseActivity {
             ReminderScheduler.schedule(this, id, p.showTitle + " · " + p.episodeLabel(), p.time);
             p.id = id;
             LocalDb.get(this).saveParty(code, p, true);
-            LocalDb.get(this).logActivity("party", "Planned a watch party: " + p.showTitle + " · " + p.episodeLabel());
-            Ui.toast(this, "Party scheduled!");
+            LocalDb.get(this).logActivity("party", Lang.s(R.string.log_planned_party, p.showTitle, p.episodeLabel()));
+            Ui.toast(this, Lang.s(R.string.party_scheduled));
             PartyDetailActivity.open(this, code, id);
             finish();
         }).addOnFailureListener(e -> {
             findViewById(R.id.btnSchedule).setEnabled(true);
-            Ui.toast(this, "Couldn't save: " + e.getMessage());
+            Ui.toast(this, Lang.s(R.string.err_couldnt_save, e.getMessage()));
         });
     }
 }

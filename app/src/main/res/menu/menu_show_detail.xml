@@ -5,15 +5,15 @@
     <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share"
-        android:title="Share"
+        android:title="@string/share"
         app:iconTint="@color/ink"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_open_web"
-        android:title="Open on TMDB website"
+        android:title="@string/open_on_tmdb_website"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_remove"
-        android:title="Remove from My Shows"
+        android:title="@string/remove_from_my_shows"
         app:showAsAction="never" />
 </menu>

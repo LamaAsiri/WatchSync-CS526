@@ -1,5 +1,7 @@
 package com.cs526.watchsync.parties;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,7 +63,7 @@ public class SpoilerRadarActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spoiler_radar);
-        setupToolbar("My progress");
+        setupToolbar(Lang.s(R.string.title_my_progress));
         code = getIntent().getStringExtra(GroupActivity.EXTRA_CODE);
 
         RecyclerView rv = findViewById(R.id.rvMembers);
@@ -139,19 +141,19 @@ public class SpoilerRadarActivity extends BaseActivity {
         if (show == null) return;
         int total = show.movie() ? 1 : Math.max(1, show.totalEpisodes);
         ((TextView) findViewById(R.id.tvMyEpisode)).setText(show.movie()
-                ? (mine >= 1 ? "Watched" : "Not watched")
+                ? Lang.s(mine >= 1 ? R.string.watched : R.string.not_watched)
                 : (mine == 0 ? "—" : EpisodeMath.label(mine, show.seasonCounts, false)));
-        ((TextView) findViewById(R.id.tvMyTotal)).setText(show.movie() ? "movie" : mine + " of " + total + " episodes");
+        ((TextView) findViewById(R.id.tvMyTotal)).setText(show.movie() ? Lang.s(R.string.movie_lower) : Lang.s(R.string.x_of_y_episodes, mine, total));
 
         TextView hint = findViewById(R.id.tvPartyHint);
         if (nextParty == null) {
-            hint.setText("No party planned for this show yet.");
+            hint.setText(Lang.s(R.string.no_party_for_show));
         } else {
             int catchUp = nextParty.episodesToCatchUp(mine);
             String when = Ui.format("EEE h:mm a", nextParty.time);
             hint.setText(catchUp > 0
-                    ? "Next party " + when + " (" + nextParty.episodeLabel() + "): watch " + EpisodeMath.count(catchUp) + " before it."
-                    : "Next party " + when + " (" + nextParty.episodeLabel() + "): you're ready!");
+                    ? Lang.s(R.string.next_party_catch_up, when, nextParty.episodeLabel(), EpisodeMath.count(catchUp))
+                    : Lang.s(R.string.next_party_ready, when, nextParty.episodeLabel()));
         }
 
         List<RowAdapter.Row> rows = new ArrayList<>();
@@ -162,20 +164,20 @@ public class SpoilerRadarActivity extends BaseActivity {
             r.name = m.name;
             r.color = m.color;
             if (p == null) {
-                r.sub = "Loading…";
+                r.sub = Lang.s(R.string.loading);
             } else {
-                r.sub = p == 0 ? "Not started" : "On " + EpisodeMath.label(p, show.seasonCounts, show.movie());
+                r.sub = p == 0 ? Lang.s(R.string.not_started) : Lang.s(R.string.on_x_cap, EpisodeMath.label(p, show.seasonCounts, show.movie()));
                 int diff = p - mine;
                 if (diff > 0) {
-                    r.badge = diff + " ahead · can spoil you";
+                    r.badge = Lang.s(R.string.n_ahead, diff);
                     r.badgeBg = Ui.RED_TINT;
                     r.badgeFg = Ui.LAVA;
                 } else if (diff < 0) {
-                    r.badge = (-diff) + " behind · don't spoil";
+                    r.badge = Lang.s(R.string.n_behind, -diff);
                     r.badgeBg = Ui.STEEL_TINT;
                     r.badgeFg = Ui.INK;
                 } else {
-                    r.badge = "Same as you";
+                    r.badge = Lang.s(R.string.same_as_you);
                     r.badgeBg = Ui.LINE;
                     r.badgeFg = Ui.INK;
                 }

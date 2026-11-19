@@ -12,8 +12,8 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <TextView style="@style/Text.Title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Join a group" />
-        <TextView style="@style/Text.Muted" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Type the 6-character code your friend sent you." />
+        <TextView style="@style/Text.Title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/join_a_group" />
+        <TextView style="@style/Text.Muted" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/type_the_6_character_code_your" />
 
         <EditText
             android:id="@+id/etCode"
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="Find group" />
+            android:text="@string/find_group" />
 
         <LinearLayout
             android:id="@+id/cardFound"
@@ -48,7 +48,7 @@
             android:padding="16dp"
             android:visibility="gone">
 
-            <TextView style="@style/Text.Overline" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="GROUP FOUND" android:textColor="@color/ink_light" />
+            <TextView style="@style/Text.Overline" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/group_found" android:textColor="@color/ink_light" />
             <TextView android:id="@+id/tvFoundName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:textColor="@color/papaya" android:textSize="22sp" android:textStyle="bold" />
             <TextView android:id="@+id/tvFoundInfo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/ink_light" android:textSize="13sp" />
         </LinearLayout>
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Join group"
+            android:text="@string/join_group"
             android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

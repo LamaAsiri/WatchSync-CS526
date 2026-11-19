@@ -12,7 +12,7 @@
         style="@style/Text.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Groups" />
+        android:text="@string/my_groups" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
-            android:text="Create" />
+            android:text="@string/create" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnJoin"
@@ -39,7 +39,7 @@
             android:maxLines="1"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:text="Join with code"
+            android:text="@string/join_with_code"
             app:autoSizeMaxTextSize="16sp"
             app:autoSizeMinTextSize="11sp"
             app:autoSizeTextType="uniform" />
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:gravity="center"
-        android:text="No groups yet. Create one and send the code to your friends, or join one with a code."
+        android:text="@string/no_groups_yet_create_one_and"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView

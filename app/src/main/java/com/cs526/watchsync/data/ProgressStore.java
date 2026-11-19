@@ -1,5 +1,8 @@
 package com.cs526.watchsync.data;
 
+import com.cs526.watchsync.util.Lang;
+import com.cs526.watchsync.R;
+
 import android.content.Context;
 
 import com.cs526.watchsync.model.Show;
@@ -24,7 +27,7 @@ public final class ProgressStore {
     public static Task<Void> remove(Context c, int tmdbId) {
         LocalDb db = LocalDb.get(c);
         Show before = db.find(tmdbId);
-        if (before != null) db.logActivity("remove", "Removed " + before.title + " from My Shows");
+        if (before != null) db.logActivity("remove", Lang.s(R.string.log_removed_show, before.title));
         db.delete(tmdbId);
         return Db.me().child("shows").child(String.valueOf(tmdbId)).removeValue();
     }
@@ -32,10 +35,10 @@ public final class ProgressStore {
     /** Writes one line in recent_activity (SQLite) about what changed. */
     private static void logChange(LocalDb db, Show show, Show before) {
         if (before == null) {
-            db.logActivity("add", "Added " + show.title + " to My Shows");
+            db.logActivity("add", Lang.s(R.string.log_added_show, show.title));
         } else if (show.progress > before.progress) {
-            db.logActivity("watch", show.movie() ? "Watched " + show.title
-                    : "Watched " + show.title + " " + EpisodeMath.label(show.progress, show.seasonCounts, false));
+            db.logActivity("watch", show.movie() ? Lang.s(R.string.log_watched, show.title)
+                    : Lang.s(R.string.log_watched_ep, show.title, EpisodeMath.label(show.progress, show.seasonCounts, false)));
         }
     }
 }

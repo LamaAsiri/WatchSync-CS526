@@ -1,5 +1,7 @@
 package com.cs526.watchsync.auth;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -57,10 +59,10 @@ public class SignUpActivity extends BaseActivity {
         String password = etPassword.getText().toString();
         String confirm = etConfirm.getText().toString();
 
-        if (name.isEmpty()) { Ui.toast(this, "Enter your name"); return; }
-        if (email.isEmpty()) { Ui.toast(this, "Enter your email"); return; }
-        if (password.length() < 6) { Ui.toast(this, "Password needs at least 6 characters"); return; }
-        if (!password.equals(confirm)) { Ui.toast(this, "Passwords don't match"); return; }
+        if (name.isEmpty()) { Ui.toast(this, Lang.s(R.string.err_enter_name)); return; }
+        if (email.isEmpty()) { Ui.toast(this, Lang.s(R.string.err_enter_email)); return; }
+        if (password.length() < 6) { Ui.toast(this, Lang.s(R.string.err_password_short)); return; }
+        if (!password.equals(confirm)) { Ui.toast(this, Lang.s(R.string.err_password_match)); return; }
 
         btnCreate.setEnabled(false);
         String color = picker.selected();
@@ -79,7 +81,7 @@ public class SignUpActivity extends BaseActivity {
                 })
                 .addOnFailureListener(e -> {
                     btnCreate.setEnabled(true);
-                    Ui.toast(this, "Sign up failed: " + e.getMessage());
+                    Ui.toast(this, Lang.s(R.string.err_signup_failed, e.getMessage()));
                 });
     }
 }

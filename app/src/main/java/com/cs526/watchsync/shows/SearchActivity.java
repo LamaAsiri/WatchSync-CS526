@@ -1,5 +1,7 @@
 package com.cs526.watchsync.shows;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -65,7 +67,7 @@ public class SearchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         groupCode = getIntent().getStringExtra(EXTRA_GROUP);
-        setupToolbar(groupCode == null ? "Find a show" : "Add to group watchlist");
+        setupToolbar(Lang.s(groupCode == null ? R.string.title_find_show : R.string.title_add_group_watchlist));
 
         api = new TmdbApi(this);
         chips = findViewById(R.id.chipGroup);
@@ -74,10 +76,10 @@ public class SearchActivity extends BaseActivity {
 
         adapter = new ShowAdapter((show, h) -> {
             if (added.contains(show.tmdbId)) {
-                h.showAction("✓ Added");
+                h.showAction(Lang.s(R.string.added_check));
                 h.action.setEnabled(false);
             } else {
-                h.showAction("+ Add");
+                h.showAction(Lang.s(R.string.add_plus));
             }
         });
         adapter.setOnAction(this::add);
@@ -120,7 +122,7 @@ public class SearchActivity extends BaseActivity {
         if (q.length() < 2) {
             results.clear();
             showFiltered();
-            tvInfo.setText("Type at least 2 letters to search.");
+            tvInfo.setText(Lang.s(R.string.type_two_letters));
             tvInfo.setVisibility(View.VISIBLE);
             return;
         }
@@ -155,7 +157,7 @@ public class SearchActivity extends BaseActivity {
         adapter.setItems(list);
         if (!results.isEmpty()) {
             tvInfo.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
-            tvInfo.setText("No results in this filter.");
+            tvInfo.setText(Lang.s(R.string.no_results));
         }
     }
 
@@ -173,14 +175,14 @@ public class SearchActivity extends BaseActivity {
     private void save(Show show) {
         if (groupCode == null) {
             ProgressStore.save(this, show, 0);
-            Ui.toast(this, show.title + " added to My Shows");
+            Ui.toast(this, Lang.s(R.string.added_to_my_shows, show.title));
         } else {
             Map<String, Object> m = show.toMap();
             m.put("progress", 0);
             m.put("addedBy", Db.uid());
             m.put("addedByName", Prefs.name(this));
             Db.group(groupCode).child("watchlist").child(String.valueOf(show.tmdbId)).setValue(m);
-            Ui.toast(this, show.title + " added to the group watchlist");
+            Ui.toast(this, Lang.s(R.string.added_to_group_watchlist, show.title));
         }
     }
 
@@ -189,11 +191,11 @@ public class SearchActivity extends BaseActivity {
         EditText etTitle = form.findViewById(R.id.etTitle);
         EditText etEpisodes = form.findViewById(R.id.etEpisodes);
         new AlertDialog.Builder(this)
-                .setTitle("Add manually")
+                .setTitle(Lang.s(R.string.add_manually))
                 .setView(form)
-                .setPositiveButton("Add", (d, w) -> {
+                .setPositiveButton(Lang.s(R.string.add), (d, w) -> {
                     String title = etTitle.getText().toString().trim();
-                    if (title.isEmpty()) { Ui.toast(this, "Enter a title"); return; }
+                    if (title.isEmpty()) { Ui.toast(this, Lang.s(R.string.err_enter_title)); return; }
                     int eps = 0;
                     try { eps = Integer.parseInt(etEpisodes.getText().toString().trim()); } catch (Exception ignored) { }
                     Show s = new Show();
@@ -205,7 +207,7 @@ public class SearchActivity extends BaseActivity {
                     added.add(s.tmdbId);
                     save(s);
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(Lang.s(R.string.cancel), null)
                 .show();
     }
 }

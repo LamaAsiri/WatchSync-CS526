@@ -19,7 +19,7 @@
             android:layout_width="54dp"
             android:layout_height="76dp"
             android:background="@drawable/bg_poster"
-            android:contentDescription="Poster"
+            android:contentDescription="@string/poster"
             android:scaleType="centerCrop" />
 
         <LinearLayout

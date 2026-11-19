@@ -1,5 +1,7 @@
 package com.cs526.watchsync.groups;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,16 +53,16 @@ public class VoteActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        setupToolbar("What's up next?");
+        setupToolbar(Lang.s(R.string.title_whats_next));
         code = getIntent().getStringExtra(GroupActivity.EXTRA_CODE);
 
         adapter = new ShowAdapter((show, h) -> {
             String id = String.valueOf(show.tmdbId);
             if (open) {
-                h.showAction(id.equals(myBallot) ? "✓ Your vote" : "Vote");
+                h.showAction(Lang.s(id.equals(myBallot) ? R.string.your_vote : R.string.vote));
             } else {
                 Integer n = counts.get(show.tmdbId);
-                h.subtitle.setText(show.summary() + " · " + (n == null ? 0 : n) + " votes");
+                h.subtitle.setText(Lang.s(R.string.n_votes, show.summary(), n == null ? 0 : n));
             }
         });
         adapter.setOnAction(this::vote);
@@ -69,7 +71,7 @@ public class VoteActivity extends BaseActivity {
         rv.setAdapter(adapter);
 
         MaterialButton btnEnd = findViewById(R.id.btnMain);
-        btnEnd.setText("End vote and pick the winner (admin)");
+        btnEnd.setText(Lang.s(R.string.end_vote_admin));
         btnEnd.setOnClickListener(v -> endVote());
     }
 
@@ -118,19 +120,19 @@ public class VoteActivity extends BaseActivity {
         View btnEnd = findViewById(R.id.btnMain);
 
         if (!vote.exists()) {
-            header.setText("There's no vote right now.");
+            header.setText(Lang.s(R.string.no_vote_now));
             highlight.setVisibility(View.GONE);
             footer.setText("");
             btnEnd.setVisibility(View.GONE);
         } else if (open) {
-            header.setText(voted + " of " + members + " have voted. Pick one; you can change it until the vote ends.");
+            header.setText(Lang.s(R.string.vote_header, voted, members));
             highlight.setVisibility(View.GONE);
-            footer.setText("Results stay hidden until the admin ends the vote.");
+            footer.setText(Lang.s(R.string.vote_footer));
             btnEnd.setVisibility(admin ? View.VISIBLE : View.GONE);
         } else {
-            header.setText("This vote has ended.");
+            header.setText(Lang.s(R.string.vote_ended));
             highlight.setVisibility(View.VISIBLE);
-            highlight.setText("Winner: " + Snap.str(vote.child("winnerTitle")));
+            highlight.setText(Lang.s(R.string.winner_x, Snap.str(vote.child("winnerTitle"))));
             footer.setText("");
             btnEnd.setVisibility(View.GONE);
         }
@@ -139,13 +141,13 @@ public class VoteActivity extends BaseActivity {
     private void vote(Show s) {
         if (!open) return;
         ref.child("vote").child("ballots").child(Db.uid()).setValue(s.tmdbId);
-        LocalDb.get(this).logActivity("vote", "Voted for " + s.title);
+        LocalDb.get(this).logActivity("vote", Lang.s(R.string.log_voted_for, s.title));
     }
 
     private void endVote() {
         if (group == null || !open) return;
         List<Show> options = adapter.getItems();
-        if (counts.isEmpty()) { Ui.toast(this, "Nobody has voted yet"); return; }
+        if (counts.isEmpty()) { Ui.toast(this, Lang.s(R.string.nobody_voted)); return; }
         int best = 0;
         for (Integer n : counts.values()) best = Math.max(best, n);
         List<Show> tied = new ArrayList<>();
@@ -161,7 +163,7 @@ public class VoteActivity extends BaseActivity {
         String[] names = new String[tied.size()];
         for (int i = 0; i < tied.size(); i++) names[i] = tied.get(i).title;
         new AlertDialog.Builder(this)
-                .setTitle("It's a tie (" + best + " votes each). You pick:")
+                .setTitle(Lang.s(R.string.tie_title, best))
                 .setItems(names, (d, which) -> applyWinner(tied.get(which)))
                 .show();
     }
@@ -177,6 +179,6 @@ public class VoteActivity extends BaseActivity {
         updates.put(group.hasChild("nowWatching") ? "upNext" : "nowWatching", w.toMap());
         updates.put("watchlist/" + w.tmdbId, null);
         ref.updateChildren(updates).addOnSuccessListener(x ->
-                Ui.toast(this, w.title + (group.hasChild("nowWatching") ? " is up next!" : " is now the group's show!")));
+                Ui.toast(this, Lang.s(group.hasChild("nowWatching") ? R.string.x_is_up_next : R.string.x_is_group_show, w.title)));
     }
 }

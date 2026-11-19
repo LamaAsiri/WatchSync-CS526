@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pick your color"
+            android:text="@string/pick_your_color"
             android:textColor="@color/ink"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -35,10 +35,10 @@
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
-            <View android:id="@+id/color0" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="10dp" android:background="@drawable/bg_circle" android:backgroundTint="#C1121F" android:contentDescription="Red" />
-            <View android:id="@+id/color1" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="10dp" android:background="@drawable/bg_circle" android:backgroundTint="#780000" android:contentDescription="Dark red" />
-            <View android:id="@+id/color2" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="10dp" android:background="@drawable/bg_circle" android:backgroundTint="#003049" android:contentDescription="Navy" />
-            <View android:id="@+id/color3" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_circle" android:backgroundTint="#669BBC" android:contentDescription="Steel blue" />
+            <View android:id="@+id/color0" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="10dp" android:background="@drawable/bg_circle" android:backgroundTint="#C1121F" android:contentDescription="@string/red" />
+            <View android:id="@+id/color1" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="10dp" android:background="@drawable/bg_circle" android:backgroundTint="#780000" android:contentDescription="@string/dark_red" />
+            <View android:id="@+id/color2" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="10dp" android:background="@drawable/bg_circle" android:backgroundTint="#003049" android:contentDescription="@string/navy" />
+            <View android:id="@+id/color3" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_circle" android:backgroundTint="#669BBC" android:contentDescription="@string/steel_blue" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

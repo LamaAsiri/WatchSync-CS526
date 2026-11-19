@@ -32,7 +32,7 @@
                     android:layout_width="96dp"
                     android:layout_height="136dp"
                     android:background="@drawable/bg_poster"
-                    android:contentDescription="Poster"
+                    android:contentDescription="@string/poster"
                     android:scaleType="centerCrop" />
 
                 <LinearLayout
@@ -90,7 +90,7 @@
                     style="@style/Text.Overline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="MY PROGRESS"
+                    android:text="@string/my_progress"
                     android:textColor="@color/muted" />
 
                 <TextView
@@ -119,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Add to My Shows"
+                android:text="@string/add_to_my_shows"
                 android:visibility="gone" />
 
             <com.google.android.material.button.MaterialButton
@@ -149,7 +149,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Episodes" />
+                        android:text="@string/episodes" />
 
                     <Spinner
                         android:id="@+id/spSeason"
@@ -167,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:layout_marginBottom="10dp"
-                    android:text="Tap an episode to mark it (and everything before it) as watched."
+                    android:text="@string/tap_an_episode_to_mark_it"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView

@@ -102,6 +102,11 @@ groups/{code}               name, adminUid, createdAt
 ## الوضع الليلي
 من Profile ← Dark mode. الألوان في `res/values-night/colors.xml`.
 
+## اللغة (English / العربية)
+- كل نصوص التطبيق في `res/values/strings.xml` (إنجليزي) و`res/values-ar/strings.xml` (عربي). ما فيه نص مكتوب مباشرة في الصفحات أو الكود.
+- من Profile ← Language: لغة الجوال، English، أو العربية. الاختيار ينحفظ في SharedPreferences مثل الوضع الليلي، والتطبيق ينقلب من اليمين لليسار بالعربي.
+- الكود في `util/Lang.java`. لما يكون التطبيق عربي، وصف المسلسل وأسماء الحلقات تجي من TMDB بالعربي إذا متوفرة.
+
 ---
 
 ## توزيع الملفات على الفريق

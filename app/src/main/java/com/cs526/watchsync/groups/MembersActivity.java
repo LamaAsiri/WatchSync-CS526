@@ -1,5 +1,7 @@
 package com.cs526.watchsync.groups;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,7 +41,7 @@ public class MembersActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_members);
-        setupToolbar("Members");
+        setupToolbar(Lang.s(R.string.title_members));
         code = getIntent().getStringExtra(GroupActivity.EXTRA_CODE);
         ((TextView) findViewById(R.id.tvInviteCode)).setText(code);
 
@@ -48,10 +50,10 @@ public class MembersActivity extends BaseActivity {
         rv.setAdapter(adapter);
 
         findViewById(R.id.btnLeave).setOnClickListener(v -> new AlertDialog.Builder(this)
-                .setTitle("Leave this group?")
-                .setMessage("You can join again later with the code.")
-                .setPositiveButton("Leave", (d, w) -> leave())
-                .setNegativeButton("Cancel", null)
+                .setTitle(Lang.s(R.string.leave_group_q))
+                .setMessage(Lang.s(R.string.leave_group_msg))
+                .setPositiveButton(Lang.s(R.string.leave), (d, w) -> leave())
+                .setNegativeButton(Lang.s(R.string.cancel), null)
                 .show());
         load();
     }
@@ -68,16 +70,16 @@ public class MembersActivity extends BaseActivity {
                 r.name = m.name;
                 r.color = m.color;
                 r.title = m.uid.equals(Db.uid()) ? m.name + " (you)" : m.name;
-                r.sub = "Joined " + Ui.format("d MMM", m.joinedAt);
+                r.sub = Lang.s(R.string.joined_date, Ui.format("d MMM", m.joinedAt));
                 if (m.uid.equals(adminUid)) {
-                    r.badge = "ADMIN";
+                    r.badge = Lang.s(R.string.badge_admin);
                     r.badgeBg = Ui.INK;
                     r.badgeFg = Ui.PAPAYA;
                 }
                 rows.add(r);
             }
             adapter.setRows(rows);
-            setToolbarTitle("Members · " + members.size());
+            setToolbarTitle(Lang.s(R.string.members_count_title, members.size()));
         });
     }
 
@@ -106,7 +108,7 @@ public class MembersActivity extends BaseActivity {
                 }
             }
             Db.root().updateChildren(updates).addOnSuccessListener(x -> {
-                Ui.toast(this, "You left the group");
+                Ui.toast(this, Lang.s(R.string.you_left_group));
                 Intent i = new Intent(this, MainActivity.class);
                 i.putExtra(MainActivity.EXTRA_TAB, R.id.nav_groups);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

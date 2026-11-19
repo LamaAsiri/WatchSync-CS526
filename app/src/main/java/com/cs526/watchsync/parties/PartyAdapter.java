@@ -1,5 +1,7 @@
 package com.cs526.watchsync.parties;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,9 +51,9 @@ public class PartyAdapter extends RecyclerView.Adapter<PartyAdapter.VH> {
         Party p = items.get(position);
         boolean upcoming = !p.ended();
 
-        h.day.setText(Ui.format("EEE", p.time).toUpperCase());
+        h.day.setText(Ui.format("EEE", p.time).toUpperCase(Lang.locale()));
         h.date.setText(Ui.format("d", p.time));
-        h.month.setText(Ui.format("MMM", p.time).toUpperCase());
+        h.month.setText(Ui.format("MMM", p.time).toUpperCase(Lang.locale()));
         int blockBg = upcoming ? Ui.RED : Ui.LINE;
         int blockFg = upcoming ? 0xFFFFFFFF : Ui.INK;
         h.dateBlock.setBackgroundTintList(ColorStateList.valueOf(blockBg));
@@ -60,22 +62,22 @@ public class PartyAdapter extends RecyclerView.Adapter<PartyAdapter.VH> {
         h.month.setTextColor(blockFg);
 
         h.title.setText(p.showTitle + " · " + p.episodeLabel());
-        h.sub.setText(Ui.time(p.time) + " · " + p.goingCount() + " going · by " + p.createdByName);
+        h.sub.setText(Lang.s(R.string.party_row_sub, Ui.time(p.time), p.goingCount(), p.createdByName));
 
         String mine = p.rsvp.get(Db.uid());
         int myProgress = LocalDb.get(h.itemView.getContext()).progressOf(p.tmdbId);
         int catchUp = p.episodesToCatchUp(myProgress);
 
         if (upcoming && catchUp > 0 && !"no".equals(mine)) {
-            Ui.badge(h.badge, "Catch up " + EpisodeMath.count(catchUp), Ui.RED_TINT, Ui.LAVA);
+            Ui.badge(h.badge, Lang.s(R.string.badge_catch_up, EpisodeMath.count(catchUp)), Ui.RED_TINT, Ui.LAVA);
         } else if ("going".equals(mine)) {
-            Ui.badge(h.badge, upcoming ? "You're in" : "You went", Ui.INK, Ui.PAPAYA);
+            Ui.badge(h.badge, Lang.s(upcoming ? R.string.badge_youre_in : R.string.badge_you_went), Ui.INK, Ui.PAPAYA);
         } else if ("no".equals(mine)) {
-            Ui.badge(h.badge, "Not going", Ui.LINE, Ui.INK);
+            Ui.badge(h.badge, Lang.s(R.string.badge_not_going), Ui.LINE, Ui.INK);
         } else if (upcoming) {
-            Ui.badge(h.badge, "Answer needed", Ui.STEEL_TINT, Ui.INK);
+            Ui.badge(h.badge, Lang.s(R.string.badge_answer_needed), Ui.STEEL_TINT, Ui.INK);
         } else {
-            Ui.badge(h.badge, "Ended", Ui.LINE, Ui.INK);
+            Ui.badge(h.badge, Lang.s(R.string.badge_ended), Ui.LINE, Ui.INK);
         }
 
         h.itemView.setOnClickListener(v -> listener.onClick(p));

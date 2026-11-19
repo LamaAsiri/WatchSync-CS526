@@ -1,5 +1,7 @@
 package com.cs526.watchsync.auth;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -20,10 +22,10 @@ public class ForgotPasswordActivity extends BaseActivity {
         View status = findViewById(R.id.tvStatus);
         findViewById(R.id.btnSend).setOnClickListener(v -> {
             String email = etEmail.getText().toString().trim();
-            if (email.isEmpty()) { Ui.toast(this, "Enter your email"); return; }
+            if (email.isEmpty()) { Ui.toast(this, Lang.s(R.string.err_enter_email)); return; }
             FirebaseAuth.getInstance().sendPasswordResetEmail(email)
                     .addOnSuccessListener(r -> status.setVisibility(View.VISIBLE))
-                    .addOnFailureListener(e -> Ui.toast(this, "Couldn't send: " + e.getMessage()));
+                    .addOnFailureListener(e -> Ui.toast(this, Lang.s(R.string.err_couldnt_send, e.getMessage())));
         });
     }
 }

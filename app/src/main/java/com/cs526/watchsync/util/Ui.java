@@ -1,5 +1,7 @@
 package com.cs526.watchsync.util;
 
+import com.cs526.watchsync.R;
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -62,27 +64,27 @@ public final class Ui {
     }
 
     public static String when(long ms) {
-        return new SimpleDateFormat("EEE d MMM · h:mm a", Locale.ENGLISH).format(new Date(ms));
+        return new SimpleDateFormat("EEE d MMM · h:mm a", Lang.locale()).format(new Date(ms));
     }
 
     public static String time(long ms) {
-        return new SimpleDateFormat("h:mm a", Locale.ENGLISH).format(new Date(ms));
+        return new SimpleDateFormat("h:mm a", Lang.locale()).format(new Date(ms));
     }
 
     public static String format(String pattern, long ms) {
-        return new SimpleDateFormat(pattern, Locale.ENGLISH).format(new Date(ms));
+        return new SimpleDateFormat(pattern, Lang.locale()).format(new Date(ms));
     }
 
     public static String countdown(long partyTime) {
         long diff = partyTime - System.currentTimeMillis();
-        if (diff <= 0) return "Started";
+        if (diff <= 0) return Lang.s(R.string.started);
         long mins = diff / 60000;
         long days = mins / (60 * 24);
         long hours = (mins / 60) % 24;
         long m = mins % 60;
-        if (days > 0) return "Starts in " + days + "d " + hours + "h";
-        if (hours > 0) return "Starts in " + hours + "h " + m + "m";
-        return "Starts in " + m + " min";
+        if (days > 0) return Lang.s(R.string.starts_in_dh, days, hours);
+        if (hours > 0) return Lang.s(R.string.starts_in_hm, hours, m);
+        return Lang.s(R.string.starts_in_m, m);
     }
 
     public static void toast(Context c, String msg) {
@@ -90,20 +92,20 @@ public final class Ui {
     }
 
     public static String firstName(String name) {
-        if (name == null || name.trim().isEmpty()) return "there";
+        if (name == null || name.trim().isEmpty()) return Lang.s(R.string.there);
         return name.trim().split(" ")[0];
     }
 
     public static void copy(Context c, String text) {
         ClipboardManager cm = (ClipboardManager) c.getSystemService(Context.CLIPBOARD_SERVICE);
         if (cm != null) cm.setPrimaryClip(ClipData.newPlainText("code", text));
-        toast(c, "Copied " + text);
+        toast(c, Lang.s(R.string.copied_x, text));
     }
 
     public static void shareCode(Context c, String groupName, String code) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_TEXT, "Join my group \"" + groupName + "\" on WatchSync with the code " + code);
-        c.startActivity(Intent.createChooser(i, "Share group code"));
+        i.putExtra(Intent.EXTRA_TEXT, Lang.s(R.string.share_code_text, groupName, code));
+        c.startActivity(Intent.createChooser(i, Lang.s(R.string.share_group_code)));
     }
 }

@@ -16,14 +16,14 @@
         <ImageView
             android:layout_width="104dp"
             android:layout_height="104dp"
-            android:contentDescription="WatchSync logo"
+            android:contentDescription="@string/watchsync_logo"
             android:src="@drawable/ic_launcher" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="WatchSync"
+            android:text="@string/app_name"
             android:textColor="@color/papaya"
             android:textSize="42sp"
             android:textStyle="bold" />
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="Track your shows. Watch together.\nNever get spoiled."
+            android:text="@string/track_your_shows_watch_together_nnever"
             android:textColor="@color/ink_light"
             android:textSize="17sp" />
     </LinearLayout>
@@ -48,7 +48,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="①  Track every episode you watch"
+            android:text="@string/track_every_episode_you_watch"
             android:textColor="@color/ink"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="②  Make a group, vote on what's next"
+            android:text="@string/make_a_group_vote_on_whats"
             android:textColor="@color/ink"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="③  Watch parties without spoilers"
+            android:text="@string/watch_parties_without_spoilers"
             android:textColor="@color/ink"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -77,7 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:text="Get started" />
+            android:text="@string/get_started" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogin"
@@ -85,6 +85,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="I already have an account" />
+            android:text="@string/i_already_have_an_account" />
     </LinearLayout>
 </LinearLayout>

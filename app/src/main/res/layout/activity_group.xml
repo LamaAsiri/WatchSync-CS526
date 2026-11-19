@@ -74,7 +74,7 @@
                             android:layout_width="70dp"
                             android:layout_height="96dp"
                             android:background="@drawable/bg_poster"
-                            android:contentDescription="Poster"
+                            android:contentDescription="@string/poster"
                             android:scaleType="centerCrop" />
 
                         <LinearLayout
@@ -84,7 +84,7 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <TextView style="@style/Text.Overline" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NOW WATCHING TOGETHER" android:textColor="@color/ink_light" />
+                            <TextView style="@style/Text.Overline" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/now_watching_together" android:textColor="@color/ink_light" />
                             <TextView android:id="@+id/tvNowTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textColor="@color/papaya" android:textSize="21sp" android:textStyle="bold" />
                             <TextView android:id="@+id/tvNowProgress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/ink_light" android:textSize="13sp" android:textStyle="bold" />
                             <TextView android:id="@+id/tvNowParty" android:layout_width="wrap_content" android:layout_height="26dp" android:layout_marginTop="8dp" android:background="@drawable/bg_badge" android:backgroundTint="@color/flag_red" android:gravity="center" android:paddingStart="10dp" android:paddingEnd="10dp" android:textColor="@color/white" android:textSize="11sp" android:textStyle="bold" />
@@ -108,7 +108,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:backgroundTint="@color/papaya"
-                        android:text="Admin: we finished this show"
+                        android:text="@string/admin_we_finished_this_show"
                         android:textColor="@color/ink"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -125,7 +125,7 @@
                 android:padding="18dp"
                 android:visibility="gone">
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="No show yet" android:textColor="@color/ink" android:textSize="19sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/no_show_yet" android:textColor="@color/ink" android:textSize="19sp" android:textStyle="bold" />
                 <TextView android:id="@+id/tvNoShow" style="@style/Text.Muted" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" />
             </LinearLayout>
 
@@ -152,7 +152,7 @@
                 android:padding="14dp"
                 android:visibility="gone">
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Vote for what's up next" android:textColor="@color/ink" android:textSize="16sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/vote_for_whats_up_next" android:textColor="@color/ink" android:textSize="16sp" android:textStyle="bold" />
                 <TextView android:id="@+id/tvVoteSub" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/ink" android:textSize="13sp" />
             </LinearLayout>
 
@@ -162,7 +162,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Start a vote (admin)"
+                android:text="@string/start_a_vote_admin"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -190,7 +190,7 @@
                         android:orientation="vertical"
                         android:padding="14dp">
 
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Watch Parties" android:textColor="@color/white" android:textSize="17sp" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/watch_parties" android:textColor="@color/white" android:textSize="17sp" android:textStyle="bold" />
                         <TextView android:id="@+id/tvPartiesSub" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="12sp" android:textStyle="bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -212,7 +212,7 @@
                         android:orientation="vertical"
                         android:padding="14dp">
 
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Spoiler Radar" android:textColor="@color/white" android:textSize="17sp" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spoiler_radar" android:textColor="@color/white" android:textSize="17sp" android:textStyle="bold" />
                         <TextView android:id="@+id/tvRadarSub" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="12sp" android:textStyle="bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -242,7 +242,7 @@
                         android:orientation="vertical"
                         android:padding="14dp">
 
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Watchlist" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/watchlist" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
                         <TextView android:id="@+id/tvWatchlistSub" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/ink" android:textSize="12sp" android:textStyle="bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -264,7 +264,7 @@
                         android:orientation="vertical"
                         android:padding="14dp">
 
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Members" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/members" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
                         <TextView android:id="@+id/tvMembersSub" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/ink" android:textSize="12sp" android:textStyle="bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

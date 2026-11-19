@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:gravity="center"
-                android:text="The group has no show yet. Vote for one first."
+                android:text="@string/the_group_has_no_show_yet"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -44,7 +44,7 @@
                     android:padding="18dp">
 
                     <TextView android:id="@+id/tvShowTitle" style="@style/Text.Overline" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/ink_light" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="I've watched up to" android:textColor="@color/ink_light" android:textSize="13sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/ive_watched_up_to" android:textColor="@color/ink_light" android:textSize="13sp" android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                             style="@style/Widget.Material3.Button.IconButton.Outlined"
                             android:layout_width="52dp"
                             android:layout_height="52dp"
-                            android:contentDescription="One episode back"
+                            android:contentDescription="@string/one_episode_back"
                             app:icon="@drawable/ic_remove"
                             app:iconTint="@color/papaya"
                             app:strokeColor="@color/steel" />
@@ -79,7 +79,7 @@
                             style="@style/Widget.Material3.Button.IconButton.Filled"
                             android:layout_width="52dp"
                             android:layout_height="52dp"
-                            android:contentDescription="One episode forward"
+                            android:contentDescription="@string/one_episode_forward"
                             app:backgroundTint="@color/flag_red"
                             app:icon="@drawable/ic_add"
                             app:iconTint="@color/white" />
@@ -99,14 +99,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="Spoiler radar" />
+                    android:text="@string/spoiler_radar_2" />
 
                 <TextView
                     style="@style/Text.Muted"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="Who is ahead of you (can spoil you) and who is behind (don't spoil them)."
+                    android:text="@string/who_is_ahead_of_you_can"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -121,7 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="See all episodes" />
+                    android:text="@string/see_all_episodes" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

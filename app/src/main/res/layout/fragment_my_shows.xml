@@ -16,7 +16,7 @@
             style="@style/Text.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="My Shows" />
+            android:text="@string/my_shows" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroup"
@@ -26,9 +26,9 @@
             app:selectionRequired="true"
             app:singleSelection="true">
 
-            <com.google.android.material.chip.Chip android:id="@+id/chipWatching" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:text="Watching" />
-            <com.google.android.material.chip.Chip android:id="@+id/chipNotStarted" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Not started" />
-            <com.google.android.material.chip.Chip android:id="@+id/chipFinished" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Finished" />
+            <com.google.android.material.chip.Chip android:id="@+id/chipWatching" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:text="@string/watching" />
+            <com.google.android.material.chip.Chip android:id="@+id/chipNotStarted" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/not_started" />
+            <com.google.android.material.chip.Chip android:id="@+id/chipFinished" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/finished" />
         </com.google.android.material.chip.ChipGroup>
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:gravity="center"
-            android:text="No shows here yet. Tap “Find a show” to add one."
+            android:text="@string/no_shows_here_yet_tap_find"
             android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
-        android:text="Find a show"
+        android:text="@string/find_a_show"
         android:textColor="@color/papaya"
         app:backgroundTint="@color/ink"
         app:icon="@drawable/ic_search"

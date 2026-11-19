@@ -26,7 +26,7 @@
                 android:background="@drawable/bg_rounded"
                 android:backgroundTint="@color/steel"
                 android:padding="14dp"
-                android:text="A vote is running. Tap to vote."
+                android:text="@string/a_vote_is_running_tap_to"
                 android:textColor="@color/ink"
                 android:textStyle="bold"
                 android:visibility="gone" />
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="Start a vote (admin)"
+                android:text="@string/start_a_vote_admin"
                 android:visibility="gone" />
 
             <TextView
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:text="The watchlist is empty. Add the shows your group wants to watch, then vote."
+                android:text="@string/the_watchlist_is_empty_add_the"
                 android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
-        android:text="Add a show"
+        android:text="@string/add_a_show"
         android:textColor="@color/papaya"
         app:backgroundTint="@color/ink"
         app:icon="@drawable/ic_add"

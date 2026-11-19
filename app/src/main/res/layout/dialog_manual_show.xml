@@ -7,9 +7,9 @@
     android:paddingTop="8dp"
     android:paddingEnd="24dp">
 
-    <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etTitle" android:text="Title" />
+    <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etTitle" android:text="@string/title" />
     <EditText android:id="@+id/etTitle" style="@style/Field" android:importantForAutofill="no" android:inputType="textCapWords" />
 
-    <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etEpisodes" android:text="Number of episodes (leave empty for a movie)" />
+    <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:labelFor="@id/etEpisodes" android:text="@string/number_of_episodes_leave_empty_for" />
     <EditText android:id="@+id/etEpisodes" style="@style/Field" android:importantForAutofill="no" android:inputType="number" />
 </LinearLayout>

@@ -16,11 +16,11 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <TextView style="@style/Text.Title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Create a group" />
-            <TextView style="@style/Text.Muted" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Name it, then share the code with your friends. You'll be the admin." />
+            <TextView style="@style/Text.Title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/create_a_group" />
+            <TextView style="@style/Text.Muted" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/name_it_then_share_the_code" />
 
-            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:labelFor="@id/etGroupName" android:text="Group name" />
-            <EditText android:id="@+id/etGroupName" style="@style/Field" android:hint="e.g. Anime Night" android:importantForAutofill="no" android:inputType="textCapWords" android:maxLength="30" />
+            <TextView style="@style/Text.Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:labelFor="@id/etGroupName" android:text="@string/group_name" />
+            <EditText android:id="@+id/etGroupName" style="@style/Field" android:hint="@string/e_g_anime_night" android:importantForAutofill="no" android:inputType="textCapWords" android:maxLength="30" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCreate"
@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Create group" />
+                android:text="@string/create_group" />
 
             <LinearLayout
                 android:id="@+id/layoutCode"
@@ -42,7 +42,7 @@
                 android:padding="22dp"
                 android:visibility="gone">
 
-                <TextView style="@style/Text.Overline" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="YOUR GROUP CODE" android:textColor="@color/ink_light" />
+                <TextView style="@style/Text.Overline" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/your_group_code" android:textColor="@color/ink_light" />
 
                 <TextView
                     android:id="@+id/tvCode"
@@ -60,8 +60,8 @@
                     android:layout_marginTop="14dp"
                     android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btnCopy" style="@style/Button.Red" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="6dp" android:layout_weight="1" android:text="Copy" />
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btnShare" style="@style/Button.Red" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:layout_weight="1" android:text="Share" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnCopy" style="@style/Button.Red" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="6dp" android:layout_weight="1" android:text="@string/copy" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnShare" style="@style/Button.Red" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:layout_weight="1" android:text="@string/share" />
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:backgroundTint="@color/papaya"
-                    android:text="Open group"
+                    android:text="@string/open_group"
                     android:textColor="@color/ink" />
             </LinearLayout>
         </LinearLayout>

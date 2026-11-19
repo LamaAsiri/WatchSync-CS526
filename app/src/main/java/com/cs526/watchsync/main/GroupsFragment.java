@@ -1,5 +1,7 @@
 package com.cs526.watchsync.main;
 
+import com.cs526.watchsync.util.Lang;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -106,8 +108,8 @@ public class GroupsFragment extends Fragment {
                 if (!isAdded() || !g.exists()) return;
                 String now = Snap.str(g.child("nowWatching/title"));
                 long members = g.child("members").getChildrenCount();
-                String sub = (now.isEmpty() ? "No show yet" : "Watching " + now) + " · " + members + " members";
-                if (Snap.bool(g.child("vote/open"))) sub += " · voting open";
+                String sub = Lang.s(R.string.group_row_sub, now.isEmpty() ? Lang.s(R.string.no_show_yet) : Lang.s(R.string.watching_x, now), members);
+                if (Snap.bool(g.child("vote/open"))) sub += Lang.s(R.string.voting_open);
                 rows.add(new String[]{code, Snap.str(g.child("name")), sub});
                 adapter.notifyDataSetChanged();
             });
