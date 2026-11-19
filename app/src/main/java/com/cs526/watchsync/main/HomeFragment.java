@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +39,7 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     private TextView tvHello, tvName, tvAvatar, tvPartyLabel, tvPartyTitle, tvPartySub, tvSpoiler;
     private View cardParty, layoutEmpty;
+    private LinearLayout layoutActivity;
     private ShowAdapter adapter;
 
     @Nullable
@@ -56,6 +59,7 @@ public class HomeFragment extends Fragment {
         tvPartySub = v.findViewById(R.id.tvPartySub);
         tvSpoiler = v.findViewById(R.id.tvSpoiler);
         layoutEmpty = v.findViewById(R.id.layoutEmpty);
+        layoutActivity = v.findViewById(R.id.layoutActivity);
 
         adapter = new ShowAdapter((show, h) -> {
             int next = show.progress + 1;
@@ -90,6 +94,30 @@ public class HomeFragment extends Fragment {
         Ui.avatar(tvAvatar, name, Prefs.color(requireContext()));
         loadUpNext();
         loadNextParty();
+        loadActivity();
+    }
+
+    /** Last 5 things I did, from the recent_activity table. */
+    private void loadActivity() {
+        layoutActivity.removeAllViews();
+        List<LocalDb.ActivityItem> items = LocalDb.get(requireContext()).recentActivity(5);
+        if (items.isEmpty()) {
+            layoutActivity.addView(activityLine("Nothing yet. Add a show or join a group to get started.", ""));
+            return;
+        }
+        for (LocalDb.ActivityItem a : items) {
+            layoutActivity.addView(activityLine(a.message, Ui.when(a.createdAt)));
+        }
+    }
+
+    private View activityLine(String message, String when) {
+        TextView tv = new TextView(requireContext());
+        tv.setText(when.isEmpty() ? message : message + "\n" + when);
+        tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.ink));
+        tv.setTextSize(14);
+        int pad = (int) (8 * getResources().getDisplayMetrics().density);
+        tv.setPadding(0, pad, 0, pad);
+        return tv;
     }
 
     private void loadUpNext() {
@@ -120,7 +148,8 @@ public class HomeFragment extends Fragment {
                         DataSnapshot group = task.getResult();
                         for (DataSnapshot ps : group.child("parties").getChildren()) {
                             Party p = Party.from(ps);
-                            if (p.time > now && !"no".equals(p.rsvp.get(Db.uid()))
+                            if (isAdded()) LocalDb.get(requireContext()).saveParty(code, p, "going".equals(p.rsvp.get(Db.uid())));
+                            if (p.endTime() > now && !"no".equals(p.rsvp.get(Db.uid()))
                                     && (best[0] == null || p.time < best[0].time)) {
                                 best[0] = p;
                                 bestGroup[0] = Snap.str(group.child("name"));

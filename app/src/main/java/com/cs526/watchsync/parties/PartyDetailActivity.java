@@ -106,6 +106,8 @@ public class PartyDetailActivity extends BaseActivity {
     private void bind(DataSnapshot g) {
         DataSnapshot ps = g.child("parties").child(partyId);
         if (!ps.exists()) {
+            LocalDb.get(this).deleteParty(partyId);
+            ReminderScheduler.cancel(this, partyId);
             Ui.toast(this, "This party was deleted");
             finish();
             return;
@@ -116,22 +118,24 @@ public class PartyDetailActivity extends BaseActivity {
         for (DataSnapshot m : g.child("members").getChildren()) members.add(Member.from(m));
         Collections.sort(members, (a, b) -> Long.compare(a.joinedAt, b.joinedAt));
 
-        boolean ended = party.time <= System.currentTimeMillis();
+        boolean ended = party.ended();
         String mine = party.rsvp.get(Db.uid());
+        LocalDb.get(this).saveParty(code, party, "going".equals(mine)); // keep the SQLite copy up to date
 
         setToolbarTitle(Snap.str(g.child("name")));
         ((TextView) findViewById(R.id.tvShowTitle)).setText(party.showTitle);
         ((TextView) findViewById(R.id.tvEpisode)).setText(party.movie() ? "Movie night"
                 : party.episodeLabel() + " · episode " + party.episode + " of " + party.totalEpisodes);
         ((TextView) findViewById(R.id.tvWhen)).setText(Ui.when(party.time) + " · planned by " + party.createdByName);
-        ((TextView) findViewById(R.id.tvCountdown)).setText(ended ? "This party has ended" : Ui.countdown(party.time));
+        ((TextView) findViewById(R.id.tvCountdown)).setText(ended ? "This party has ended"
+                : party.live() ? "Happening now" : Ui.countdown(party.time));
 
         TextView note = findViewById(R.id.tvNote);
         note.setVisibility(party.note.isEmpty() ? View.GONE : View.VISIBLE);
         note.setText("Note: " + party.note);
 
         // RSVP buttons
-        findViewById(R.id.layoutRsvp).setVisibility(ended ? View.GONE : View.VISIBLE);
+        findViewById(R.id.layoutRsvp).setVisibility(party.upcoming() ? View.VISIBLE : View.GONE);
         ((MaterialButton) findViewById(R.id.btnGoing)).setText("going".equals(mine) ? "✓ You're in" : "I'm in");
         ((MaterialButton) findViewById(R.id.btnNotGoing)).setText("no".equals(mine) ? "✓ Not going" : "Can't go");
 
@@ -166,7 +170,7 @@ public class PartyDetailActivity extends BaseActivity {
 
     private void render() {
         if (party == null) return;
-        boolean ended = party.time <= System.currentTimeMillis();
+        boolean ended = party.ended();
 
         // My spoiler warning
         Integer mineObj = progress.get(Db.uid());
@@ -217,7 +221,11 @@ public class PartyDetailActivity extends BaseActivity {
     private void rsvp(String answer) {
         if (party == null) return;
         ref.child("parties").child(partyId).child("rsvp").child(Db.uid()).setValue(answer);
-        if ("going".equals(answer)) {
+        boolean going = "going".equals(answer);
+        LocalDb.get(this).saveParty(code, party, going);
+        LocalDb.get(this).logActivity("party", (going ? "Going to " : "Can't go to ")
+                + party.showTitle + " · " + party.episodeLabel());
+        if (going) {
             ReminderScheduler.schedule(this, partyId, party.showTitle + " · " + party.episodeLabel(), party.time);
         } else {
             ReminderScheduler.cancel(this, partyId);
@@ -230,6 +238,7 @@ public class PartyDetailActivity extends BaseActivity {
                 .setMessage("Everyone in the group will stop seeing it.")
                 .setPositiveButton("Delete", (d, w) -> {
                     ReminderScheduler.cancel(this, partyId);
+                    LocalDb.get(this).deleteParty(partyId);
                     ref.child("parties").child(partyId).removeValue();
                     finish();
                 })

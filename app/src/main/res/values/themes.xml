@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.WatchSync" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.WatchSync" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/ink</item>
         <item name="colorOnPrimary">@color/papaya</item>
         <item name="colorSecondary">@color/flag_red</item>
@@ -15,7 +15,7 @@
         <item name="android:windowBackground">@color/papaya</item>
         <item name="android:statusBarColor">@color/papaya</item>
         <item name="android:navigationBarColor">@color/ink</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">@bool/light_status_bar</item>
     </style>
 
     <!-- Text -->

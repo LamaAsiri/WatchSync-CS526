@@ -100,9 +100,8 @@ public class PartiesActivity extends BaseActivity {
 
     private void render() {
         boolean upcoming = toggle.getCheckedButtonId() != R.id.btnPast;
-        long now = System.currentTimeMillis();
         List<Party> list = new ArrayList<>();
-        for (Party p : all) if ((p.time > now) == upcoming) list.add(p);
+        for (Party p : all) if (!p.ended() == upcoming) list.add(p); // a party that is on right now stays in "Upcoming"
         // upcoming: soonest first, past: newest first
         Collections.sort(list, (a, b) -> upcoming ? Long.compare(a.time, b.time) : Long.compare(b.time, a.time));
         adapter.setItems(list);

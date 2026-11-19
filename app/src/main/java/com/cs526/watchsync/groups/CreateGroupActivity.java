@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.cs526.watchsync.BaseActivity;
 import com.cs526.watchsync.R;
 import com.cs526.watchsync.data.Db;
+import com.cs526.watchsync.data.LocalDb;
 import com.cs526.watchsync.data.Prefs;
 import com.cs526.watchsync.model.Member;
 import com.cs526.watchsync.util.Ui;
@@ -49,7 +50,10 @@ public class CreateGroupActivity extends BaseActivity {
             updates.put("groups/" + code + "/members/" + uid, Member.map(Prefs.name(this), Prefs.color(this)));
             updates.put("users/" + uid + "/groups/" + code, true);
             Db.root().updateChildren(updates)
-                    .addOnSuccessListener(x -> showCode(code))
+                    .addOnSuccessListener(x -> {
+                        LocalDb.get(this).logActivity("group", "Created the group " + groupName);
+                        showCode(code);
+                    })
                     .addOnFailureListener(e -> { btnCreate.setEnabled(true); Ui.toast(this, "Couldn't create: " + e.getMessage()); });
         }).addOnFailureListener(e -> { btnCreate.setEnabled(true); Ui.toast(this, "No connection: " + e.getMessage()); });
     }

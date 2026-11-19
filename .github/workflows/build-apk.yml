@@ -5,6 +5,7 @@ name: Build APK
 on:
   push:
     branches: [ main ]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -42,7 +43,9 @@ jobs:
           name: WatchSync-apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
+      # Only builds from main become a release; pull requests just check that the app builds
       - name: Publish release
+        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cs526.watchsync.BaseActivity;
 import com.cs526.watchsync.R;
 import com.cs526.watchsync.data.Db;
+import com.cs526.watchsync.data.LocalDb;
 import com.cs526.watchsync.model.Show;
 import com.cs526.watchsync.shows.ShowAdapter;
 import com.cs526.watchsync.util.Snap;
@@ -138,6 +139,7 @@ public class VoteActivity extends BaseActivity {
     private void vote(Show s) {
         if (!open) return;
         ref.child("vote").child("ballots").child(Db.uid()).setValue(s.tmdbId);
+        LocalDb.get(this).logActivity("vote", "Voted for " + s.title);
     }
 
     private void endVote() {

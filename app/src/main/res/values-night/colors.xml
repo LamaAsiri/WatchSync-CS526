@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Dark mode colours. Android uses this file instead of values/colors.xml
+        when the app is in night mode (turned on from Profile, saved in SharedPreferences).
+        Same names, so every layout switches by itself.
+    -->
+    <color name="papaya">#0E1A24</color>      <!-- background -->
+    <color name="ink">#F3E7CC</color>         <!-- main text, buttons, bottom bar -->
+    <color name="steel">#4F86A8</color>
+    <color name="flag_red">#C1121F</color>
+    <color name="lava">#FFB4AB</color>
+
+    <color name="card">#16242F</color>
+    <color name="line">#2A3B49</color>
+    <color name="muted">#A9B6C1</color>
+    <color name="steel_tint">#1F3546</color>
+    <color name="red_tint">#3E1719</color>
+    <color name="ink_light">#4A6378</color>
+    <color name="ink_dark">#D6C8AB</color>
+    <color name="white">#FFFFFF</color>
+</resources>

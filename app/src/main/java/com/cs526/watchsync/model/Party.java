@@ -23,6 +23,30 @@ public class Party {
     public String createdByName = "";
     public Map<String, String> rsvp = new HashMap<>(); // uid -> "going" / "no"
 
+    /** How long a party lasts after it starts: about one episode, or a whole movie. */
+    public static final long EPISODE_LENGTH = 60L * 60L * 1000L;
+    public static final long MOVIE_LENGTH = 3L * 60L * 60L * 1000L;
+
+    public long endTime() {
+        return time + (movie() ? MOVIE_LENGTH : EPISODE_LENGTH);
+    }
+
+    /** Not started yet. */
+    public boolean upcoming() {
+        return time > System.currentTimeMillis();
+    }
+
+    /** Started but not finished: the group is watching right now. */
+    public boolean live() {
+        long now = System.currentTimeMillis();
+        return time <= now && now < endTime();
+    }
+
+    /** Finished: the episode (or movie) is over. */
+    public boolean ended() {
+        return endTime() <= System.currentTimeMillis();
+    }
+
     public boolean movie() {
         return "movie".equals(mediaType);
     }

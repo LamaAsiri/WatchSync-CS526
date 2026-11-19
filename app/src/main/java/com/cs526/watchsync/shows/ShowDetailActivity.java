@@ -1,8 +1,13 @@
 package com.cs526.watchsync.shows;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +29,7 @@ import com.cs526.watchsync.data.TmdbApi;
 import com.cs526.watchsync.model.Show;
 import com.cs526.watchsync.util.EpisodeMath;
 import com.cs526.watchsync.util.Ui;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -55,6 +63,12 @@ public class ShowDetailActivity extends BaseActivity {
         api = new TmdbApi(this);
         show = Show.fromIntent(getIntent());
 
+        // Use the top bar as the app bar so it can show the options menu
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationOnClickListener(v -> finish());
+
         tvMeta = findViewById(R.id.tvMeta);
         tvOverview = findViewById(R.id.tvOverview);
         tvProgress = findViewById(R.id.tvProgress);
@@ -66,7 +80,9 @@ public class ShowDetailActivity extends BaseActivity {
 
         ((TextView) findViewById(R.id.tvTitle)).setText(show.title);
         ((TextView) findViewById(R.id.tvType)).setText(show.typeLabel().toUpperCase());
-        Ui.poster((ImageView) findViewById(R.id.ivPoster), show.posterPath);
+        ImageView ivPoster = findViewById(R.id.ivPoster);
+        Ui.poster(ivPoster, show.posterPath);
+        registerForContextMenu(ivPoster); // long press on the poster opens the context menu
 
         episodes = new EpisodeAdapter(this::onEpisodeTap);
         RecyclerView rv = findViewById(R.id.rvEpisodes);
@@ -116,6 +132,7 @@ public class ShowDetailActivity extends BaseActivity {
         btnAddLibrary.setVisibility(inLibrary ? View.GONE : View.VISIBLE);
         btnMovieWatched.setVisibility(show.movie() ? View.VISIBLE : View.GONE);
         btnMovieWatched.setText(show.progress >= 1 ? "Mark as not watched" : "✓ Mark as watched");
+        invalidateOptionsMenu(); // "Remove" only shows once the show is in My Shows
     }
 
     private void setupSeasons() {
@@ -178,5 +195,102 @@ public class ShowDetailActivity extends BaseActivity {
         inLibrary = true;
         refresh();
         episodes.setProgress(show.progress);
+    }
+
+    // ---------- Options menu (app bar) ----------
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_show_detail, menu);
+        return true;
+    }
+
+    /** Runs after invalidateOptionsMenu(): hide what doesn't apply to this show. */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_open_web).setVisible(show.tmdbId > 0);
+        menu.findItem(R.id.action_remove).setVisible(inLibrary);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_share) {
+            shareShow();
+            return true;
+        } else if (id == R.id.action_open_web) {
+            openWebsite();
+            return true;
+        } else if (id == R.id.action_remove) {
+            confirmRemove();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // ---------- Context menu (long press on the poster) ----------
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.menu_poster, menu);
+        menu.setHeaderTitle(show.title);
+        menu.findItem(R.id.poster_open_web).setVisible(show.tmdbId > 0);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.poster_open_web) {
+            openWebsite();
+            return true;
+        } else if (id == R.id.poster_share) {
+            shareShow();
+            return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    // ---------- Actions ----------
+
+    /** Implicit intent (ACTION_VIEW): the phone picks a browser to open the show's TMDB page. */
+    private void openWebsite() {
+        if (show.tmdbId <= 0) return;
+        Uri uri = Uri.parse("https://www.themoviedb.org/" + (show.movie() ? "movie/" : "tv/") + show.tmdbId);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Ui.toast(this, "No browser found on this phone");
+        }
+    }
+
+    /** Implicit intent (ACTION_SEND): share the show with any app (WhatsApp, Messages...). */
+    private void shareShow() {
+        String text = "I'm watching " + show.title + " on WatchSync";
+        if (!show.movie() && show.progress > 0) {
+            text += " (" + EpisodeMath.label(show.progress, show.seasonCounts, false) + ")";
+        }
+        if (show.tmdbId > 0) {
+            text += "\nhttps://www.themoviedb.org/" + (show.movie() ? "movie/" : "tv/") + show.tmdbId;
+        }
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+        startActivity(Intent.createChooser(intent, "Share show"));
+    }
+
+    private void confirmRemove() {
+        new AlertDialog.Builder(this)
+                .setTitle("Remove " + show.title + "?")
+                .setMessage("Your progress on this show will be deleted.")
+                .setPositiveButton("Remove", (d, w) -> {
+                    ProgressStore.remove(this, show.tmdbId);
+                    Ui.toast(this, show.title + " removed");
+                    finish();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }

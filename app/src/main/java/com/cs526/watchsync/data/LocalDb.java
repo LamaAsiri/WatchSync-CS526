@@ -6,19 +6,25 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.cs526.watchsync.model.Party;
 import com.cs526.watchsync.model.Show;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * SQLite copy of "My Shows" on this phone.
- * Screens read from here first (fast, works offline), then Firebase updates it.
+ * SQLite database on this phone (watchsync.db), 3 tables:
+ *
+ * my_shows         copy of "My Shows" + my progress. Screens read from here first (fast, works offline).
+ * parties          watch parties from all my groups. Used to bring reminders back after the phone restarts.
+ * recent_activity  what I did lately (added a show, watched an episode, joined a group...). Shown on Home.
  */
 public class LocalDb extends SQLiteOpenHelper {
     private static final String DB_NAME = "watchsync.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     public static final String TABLE = "my_shows";
+    public static final String TABLE_PARTIES = "parties";
+    public static final String TABLE_ACTIVITY = "recent_activity";
 
     private static LocalDb instance;
 
@@ -45,12 +51,30 @@ public class LocalDb extends SQLiteOpenHelper {
                 + "season_counts TEXT, "
                 + "progress INTEGER, "
                 + "updated_at INTEGER)");
+        createV2Tables(db);
+    }
+
+    /** Tables added in version 2. */
+    private void createV2Tables(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_PARTIES + " ("
+                + "party_id TEXT PRIMARY KEY, "
+                + "group_code TEXT, "
+                + "tmdb_id INTEGER, "
+                + "show_title TEXT, "
+                + "episode_label TEXT, "
+                + "party_time INTEGER, "
+                + "going INTEGER)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_ACTIVITY + " ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "type TEXT, "
+                + "message TEXT, "
+                + "created_at INTEGER)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldV, int newV) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE);
-        onCreate(db);
+        // Version 1 only had my_shows: keep it and add the new tables
+        if (oldV < 2) createV2Tables(db);
     }
 
     public void upsert(Show s) {
@@ -73,8 +97,12 @@ public class LocalDb extends SQLiteOpenHelper {
         getWritableDatabase().delete(TABLE, "tmdb_id = ?", new String[]{String.valueOf(tmdbId)});
     }
 
+    /** Log out: empty every table. */
     public void clear() {
-        getWritableDatabase().delete(TABLE, null, null);
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE, null, null);
+        db.delete(TABLE_PARTIES, null, null);
+        db.delete(TABLE_ACTIVITY, null, null);
     }
 
     public Show find(int tmdbId) {
@@ -132,5 +160,91 @@ public class LocalDb extends SQLiteOpenHelper {
     private static String str(Cursor c, String col) {
         String v = c.getString(c.getColumnIndexOrThrow(col));
         return v == null ? "" : v;
+    }
+
+    // ---------- parties ----------
+
+    /** Saves (or updates) one party and whether I'm going. */
+    public void saveParty(String code, Party p, boolean going) {
+        ContentValues v = new ContentValues();
+        v.put("party_id", p.id);
+        v.put("group_code", code);
+        v.put("tmdb_id", p.tmdbId);
+        v.put("show_title", p.showTitle);
+        v.put("episode_label", p.episodeLabel());
+        v.put("party_time", p.time);
+        v.put("going", going ? 1 : 0);
+        getWritableDatabase().insertWithOnConflict(TABLE_PARTIES, null, v, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    public void deleteParty(String partyId) {
+        getWritableDatabase().delete(TABLE_PARTIES, "party_id = ?", new String[]{partyId});
+    }
+
+    /** Parties I said "I'm in" to that haven't started yet (soonest first). */
+    public List<SavedParty> upcomingPartiesImGoingTo() {
+        List<SavedParty> list = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().query(TABLE_PARTIES, null,
+                "going = 1 AND party_time > ?", new String[]{String.valueOf(System.currentTimeMillis())},
+                null, null, "party_time ASC")) {
+            while (c.moveToNext()) {
+                SavedParty p = new SavedParty();
+                p.id = str(c, "party_id");
+                p.groupCode = str(c, "group_code");
+                p.title = str(c, "show_title");
+                p.episodeLabel = str(c, "episode_label");
+                p.time = c.getLong(c.getColumnIndexOrThrow("party_time"));
+                list.add(p);
+            }
+        }
+        return list;
+    }
+
+    /** One row of the parties table. */
+    public static class SavedParty {
+        public String id = "";
+        public String groupCode = "";
+        public String title = "";
+        public String episodeLabel = "";
+        public long time;
+    }
+
+    // ---------- recent_activity ----------
+
+    public static final int ACTIVITY_LIMIT = 30;
+
+    /** Adds one line to my recent activity, and keeps only the newest 30. */
+    public void logActivity(String type, String message) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues v = new ContentValues();
+        v.put("type", type);
+        v.put("message", message);
+        v.put("created_at", System.currentTimeMillis());
+        db.insert(TABLE_ACTIVITY, null, v);
+        db.execSQL("DELETE FROM " + TABLE_ACTIVITY + " WHERE id NOT IN (SELECT id FROM "
+                + TABLE_ACTIVITY + " ORDER BY id DESC LIMIT " + ACTIVITY_LIMIT + ")");
+    }
+
+    /** The newest activity first. */
+    public List<ActivityItem> recentActivity(int limit) {
+        List<ActivityItem> list = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().query(TABLE_ACTIVITY, null, null, null,
+                null, null, "id DESC", String.valueOf(limit))) {
+            while (c.moveToNext()) {
+                ActivityItem a = new ActivityItem();
+                a.type = str(c, "type");
+                a.message = str(c, "message");
+                a.createdAt = c.getLong(c.getColumnIndexOrThrow("created_at"));
+                list.add(a);
+            }
+        }
+        return list;
+    }
+
+    /** One row of the recent_activity table. */
+    public static class ActivityItem {
+        public String type = "";
+        public String message = "";
+        public long createdAt;
     }
 }

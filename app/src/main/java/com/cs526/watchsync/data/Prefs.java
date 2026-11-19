@@ -3,6 +3,8 @@ package com.cs526.watchsync.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 /** SharedPreferences: small settings kept on this phone. */
 public final class Prefs {
     private static final String FILE = "watchsync_prefs";
@@ -33,7 +35,23 @@ public final class Prefs {
         p(c).edit().putBoolean("reminders", on).apply();
     }
 
+    public static boolean darkMode(Context c) {
+        return p(c).getBoolean("dark_mode", false);
+    }
+
+    public static void setDarkMode(Context c, boolean on) {
+        p(c).edit().putBoolean("dark_mode", on).apply();
+    }
+
+    /** Applies the saved light / dark choice to the whole app. */
+    public static void applyTheme(Context c) {
+        AppCompatDelegate.setDefaultNightMode(darkMode(c)
+                ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+    }
+
+    /** Log out: forget the account, but keep the dark mode choice (it belongs to the phone). */
     public static void clear(Context c) {
-        p(c).edit().clear().apply();
+        boolean dark = darkMode(c);
+        p(c).edit().clear().putBoolean("dark_mode", dark).apply();
     }
 }
