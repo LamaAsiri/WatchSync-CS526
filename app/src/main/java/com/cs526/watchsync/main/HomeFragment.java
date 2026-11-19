@@ -180,8 +180,18 @@ public class HomeFragment extends Fragment {
         tvPartySub.setText(Ui.when(p.time) + " · " + p.goingCount() + " going");
         cardParty.setOnClickListener(v -> PartyDetailActivity.open(requireContext(), code, p.id));
 
-        int mine = LocalDb.get(requireContext()).progressOf(p.tmdbId);
-        int catchUp = p.episodesToCatchUp(mine);
+        // Show the phone's copy first, then check Firebase (progress may have been saved
+        // from another phone, or this phone's SQLite copy isn't synced yet)
+        int local = LocalDb.get(requireContext()).progressOf(p.tmdbId);
+        showSpoiler(p, local);
+        Db.me().child("shows").child(String.valueOf(p.tmdbId)).child("progress").get()
+                .addOnSuccessListener(snap -> {
+                    if (isAdded() && snap.exists()) showSpoiler(p, Math.max(local, Snap.num(snap)));
+                });
+    }
+
+    private void showSpoiler(Party p, int mine) {
+        int catchUp = p.ended() ? 0 : p.episodesToCatchUp(mine);
         if (catchUp > 0) {
             tvSpoiler.setVisibility(View.VISIBLE);
             tvSpoiler.setText("Spoiler alert: watch " + EpisodeMath.count(catchUp) + " of " + p.showTitle
