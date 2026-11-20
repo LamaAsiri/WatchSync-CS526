@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ratings + "How was the watch party?" (kept in their own file; Arabic in values-ar/strings_ratings.xml) -->
+<resources>
+    <string name="ratings">Ratings</string>
+    <string name="rate">Rate</string>
+    <string name="rate_episode_x">Rate %1$s</string>
+    <string name="rate_the_movie">Rate the movie</string>
+    <string name="tap_the_stars">Tap the stars (half stars work too)</string>
+    <string name="stars_value">%1$s / 5</string>
+    <string name="review_hint">Your review (optional)</string>
+    <string name="review_spoiler_note">Friends who haven\'t watched this yet won\'t see your rating.</string>
+    <string name="skip">Skip</string>
+    <string name="save_rating">Save</string>
+    <string name="remove_rating">Remove my rating</string>
+    <string name="err_pick_stars">Pick at least half a star</string>
+    <string name="rating_saved">Rating saved</string>
+    <string name="log_rated">Rated %1$s · %2$s ★%3$s</string>
+    <string name="you_label">You</string>
+    <string name="summary_you">You ★%1$s (%2$d)</string>
+    <string name="summary_friends">Friends ★%1$s (%2$d)</string>
+    <string name="no_ratings_show">No ratings yet. Rate an episode after you watch it.</string>
+    <string name="no_ratings_movie">No ratings yet. Rate it after you watch it.</string>
+    <string name="hidden_reviews">🔒 Hidden so they don\'t spoil it for you: %1$d (on episodes you haven\'t watched yet)</string>
+    <string name="watch_first">Mark it as watched first, then you can rate it.</string>
+    <string name="notif_after_title">How was the watch party?</string>
+    <string name="notif_after_text">%1$s · Tap to check in and rate it (optional)</string>
+</resources>

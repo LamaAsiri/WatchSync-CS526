@@ -197,6 +197,7 @@ public class SchedulePartyActivity extends BaseActivity {
         findViewById(R.id.btnSchedule).setEnabled(false);
         ref.setValue(p.toMap()).addOnSuccessListener(x -> {
             ReminderScheduler.schedule(this, id, p.showTitle + " · " + p.episodeLabel(), p.time);
+            ReminderScheduler.scheduleAfterParty(this, code, id, p.showTitle + " · " + p.episodeLabel(), p.endTime());
             p.id = id;
             LocalDb.get(this).saveParty(code, p, true);
             LocalDb.get(this).logActivity("party", Lang.s(R.string.log_planned_party, p.showTitle, p.episodeLabel()));

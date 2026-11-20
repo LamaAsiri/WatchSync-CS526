@@ -73,7 +73,7 @@
     <string name="my_progress">تقدمي</string>
     <string name="add_to_my_shows">أضف لمسلسلاتي</string>
     <string name="episodes">الحلقات</string>
-    <string name="tap_an_episode_to_mark_it">اضغط على حلقة عشان تعلّمها (وكل اللي قبلها) إنك شفتها.</string>
+    <string name="tap_an_episode_to_mark_it">اضغط على حلقة عشان تعلّمها (وكل اللي قبلها) إنك شفتها. واضغط ضغطة طويلة على حلقة شفتها عشان تقيّمها.</string>
     <string name="create_your_account">أنشئ حسابك</string>
     <string name="name">الاسم</string>
     <string name="your_name">اسمك</string>

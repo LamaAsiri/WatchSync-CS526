@@ -27,11 +27,13 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.VH> {
 
     private final List<String> names = new ArrayList<>();
     private final Listener listener;
+    private final Listener longPress;   // long press = rate this episode
     private int firstNumber; // running number of episode 1 of this season minus 1
     private int progress;
 
-    public EpisodeAdapter(Listener listener) {
+    public EpisodeAdapter(Listener listener, Listener longPress) {
         this.listener = listener;
+        this.longPress = longPress;
     }
 
     public void setSeason(int numberBefore, int count, int progress) {
@@ -72,6 +74,11 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.VH> {
         h.check.setImageTintList(ColorStateList.valueOf(watched ? 0xFFFFFFFF : Ui.MUTED));
         h.check.setContentDescription(Lang.s(watched ? R.string.watched : R.string.not_watched));
         h.itemView.setOnClickListener(v -> listener.onTap(number));
+        h.itemView.setOnLongClickListener(v -> {
+            if (longPress == null) return false;
+            longPress.onTap(number);
+            return true;
+        });
     }
 
     @Override

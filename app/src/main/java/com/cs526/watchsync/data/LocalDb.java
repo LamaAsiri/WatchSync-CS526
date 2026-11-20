@@ -7,24 +7,27 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.cs526.watchsync.model.Party;
+import com.cs526.watchsync.model.Rating;
 import com.cs526.watchsync.model.Show;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * SQLite database on this phone (watchsync.db), 3 tables:
+ * SQLite database on this phone (watchsync.db), 4 tables:
  *
  * my_shows         copy of "My Shows" + my progress. Screens read from here first (fast, works offline).
  * parties          watch parties from all my groups. Used to bring reminders back after the phone restarts.
  * recent_activity  what I did lately (added a show, watched an episode, joined a group...). Shown on Home.
+ * ratings          my stars + review for episodes and movies (version 3).
  */
 public class LocalDb extends SQLiteOpenHelper {
     private static final String DB_NAME = "watchsync.db";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
     public static final String TABLE = "my_shows";
     public static final String TABLE_PARTIES = "parties";
     public static final String TABLE_ACTIVITY = "recent_activity";
+    public static final String TABLE_RATINGS = "ratings";
 
     private static LocalDb instance;
 
@@ -52,6 +55,7 @@ public class LocalDb extends SQLiteOpenHelper {
                 + "progress INTEGER, "
                 + "updated_at INTEGER)");
         createV2Tables(db);
+        createV3Tables(db);
     }
 
     /** Tables added in version 2. */
@@ -63,7 +67,8 @@ public class LocalDb extends SQLiteOpenHelper {
                 + "show_title TEXT, "
                 + "episode_label TEXT, "
                 + "party_time INTEGER, "
-                + "going INTEGER)");
+                + "going INTEGER, "
+                + "end_time INTEGER DEFAULT 0)");
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_ACTIVITY + " ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "type TEXT, "
@@ -71,10 +76,28 @@ public class LocalDb extends SQLiteOpenHelper {
                 + "created_at INTEGER)");
     }
 
+    /** Version 3: ratings table. */
+    private void createV3Tables(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_RATINGS + " ("
+                + "tmdb_id INTEGER, "
+                + "episode INTEGER, "
+                + "stars REAL, "
+                + "review TEXT, "
+                + "show_title TEXT, "
+                + "label TEXT, "
+                + "rated_at INTEGER, "
+                + "PRIMARY KEY (tmdb_id, episode))");
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldV, int newV) {
         // Version 1 only had my_shows: keep it and add the new tables
         if (oldV < 2) createV2Tables(db);
+        if (oldV == 2) {
+            // parties already existed without end_time (when the party is over)
+            db.execSQL("ALTER TABLE " + TABLE_PARTIES + " ADD COLUMN end_time INTEGER DEFAULT 0");
+        }
+        if (oldV < 3) createV3Tables(db);
     }
 
     public void upsert(Show s) {
@@ -103,6 +126,7 @@ public class LocalDb extends SQLiteOpenHelper {
         db.delete(TABLE, null, null);
         db.delete(TABLE_PARTIES, null, null);
         db.delete(TABLE_ACTIVITY, null, null);
+        db.delete(TABLE_RATINGS, null, null);
     }
 
     public Show find(int tmdbId) {
@@ -173,6 +197,7 @@ public class LocalDb extends SQLiteOpenHelper {
         v.put("show_title", p.showTitle);
         v.put("episode_label", p.episodeLabel());
         v.put("party_time", p.time);
+        v.put("end_time", p.endTime());
         v.put("going", going ? 1 : 0);
         getWritableDatabase().insertWithOnConflict(TABLE_PARTIES, null, v, SQLiteDatabase.CONFLICT_REPLACE);
     }
@@ -187,17 +212,36 @@ public class LocalDb extends SQLiteOpenHelper {
         try (Cursor c = getReadableDatabase().query(TABLE_PARTIES, null,
                 "going = 1 AND party_time > ?", new String[]{String.valueOf(System.currentTimeMillis())},
                 null, null, "party_time ASC")) {
+            while (c.moveToNext()) list.add(readParty(c));
+        }
+        return list;
+    }
+
+    /** Parties I'm going to whose "How was it?" notification hasn't come yet (for BootReceiver). */
+    public List<SavedParty> partiesImGoingToNotOverYet(long afterPartyDelay) {
+        List<SavedParty> list = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().query(TABLE_PARTIES, null,
+                // compare against a number on the column itself, so SQLite treats the argument as a number
+                "going = 1 AND end_time > ?",
+                new String[]{String.valueOf(System.currentTimeMillis() - afterPartyDelay)},
+                null, null, "party_time ASC")) {
             while (c.moveToNext()) {
-                SavedParty p = new SavedParty();
-                p.id = str(c, "party_id");
-                p.groupCode = str(c, "group_code");
-                p.title = str(c, "show_title");
-                p.episodeLabel = str(c, "episode_label");
-                p.time = c.getLong(c.getColumnIndexOrThrow("party_time"));
+                SavedParty p = readParty(c);
                 list.add(p);
             }
         }
         return list;
+    }
+
+    private static SavedParty readParty(Cursor c) {
+        SavedParty p = new SavedParty();
+        p.id = str(c, "party_id");
+        p.groupCode = str(c, "group_code");
+        p.title = str(c, "show_title");
+        p.episodeLabel = str(c, "episode_label");
+        p.time = c.getLong(c.getColumnIndexOrThrow("party_time"));
+        p.endTime = c.getLong(c.getColumnIndexOrThrow("end_time"));
+        return p;
     }
 
     /** One row of the parties table. */
@@ -207,6 +251,56 @@ public class LocalDb extends SQLiteOpenHelper {
         public String title = "";
         public String episodeLabel = "";
         public long time;
+        public long endTime;
+    }
+
+    // ---------- ratings ----------
+
+    public void saveRating(Rating r) {
+        ContentValues v = new ContentValues();
+        v.put("tmdb_id", r.tmdbId);
+        v.put("episode", r.episode);
+        v.put("stars", r.stars);
+        v.put("review", r.review);
+        v.put("show_title", r.showTitle);
+        v.put("label", r.label);
+        v.put("rated_at", r.ratedAt);
+        getWritableDatabase().insertWithOnConflict(TABLE_RATINGS, null, v, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    public void deleteRating(int tmdbId, int episode) {
+        getWritableDatabase().delete(TABLE_RATINGS, "tmdb_id = ? AND episode = ?",
+                new String[]{String.valueOf(tmdbId), String.valueOf(episode)});
+    }
+
+    /** My rating for one episode (or the movie), or null. */
+    public Rating findRating(int tmdbId, int episode) {
+        try (Cursor c = getReadableDatabase().query(TABLE_RATINGS, null, "tmdb_id = ? AND episode = ?",
+                new String[]{String.valueOf(tmdbId), String.valueOf(episode)}, null, null, null)) {
+            return c.moveToFirst() ? readRating(c) : null;
+        }
+    }
+
+    /** All my ratings for one show, newest first. */
+    public List<Rating> ratingsFor(int tmdbId) {
+        List<Rating> list = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().query(TABLE_RATINGS, null, "tmdb_id = ?",
+                new String[]{String.valueOf(tmdbId)}, null, null, "rated_at DESC")) {
+            while (c.moveToNext()) list.add(readRating(c));
+        }
+        return list;
+    }
+
+    private static Rating readRating(Cursor c) {
+        Rating r = new Rating();
+        r.tmdbId = c.getInt(c.getColumnIndexOrThrow("tmdb_id"));
+        r.episode = c.getInt(c.getColumnIndexOrThrow("episode"));
+        r.stars = c.getFloat(c.getColumnIndexOrThrow("stars"));
+        r.review = str(c, "review");
+        r.showTitle = str(c, "show_title");
+        r.label = str(c, "label");
+        r.ratedAt = c.getLong(c.getColumnIndexOrThrow("rated_at"));
+        return r;
     }
 
     // ---------- recent_activity ----------

@@ -23,6 +23,7 @@ import com.cs526.watchsync.model.Member;
 import com.cs526.watchsync.model.Party;
 import com.cs526.watchsync.model.Show;
 import com.cs526.watchsync.reminders.ReminderScheduler;
+import com.cs526.watchsync.shows.RatingSheet;
 import com.cs526.watchsync.shows.ShowDetailActivity;
 import com.cs526.watchsync.util.EpisodeMath;
 import com.cs526.watchsync.util.RowAdapter;
@@ -42,7 +43,8 @@ import java.util.Map;
 
 /**
  * One watch party: countdown, spoiler warning, who's coming (and who's ready), RSVP.
- * After the party ends, asks "Did you watch it?" and moves my progress forward.
+ * After the party ends, asks "Did you watch it?", moves my progress forward and lets me rate it.
+ * The "How was the watch party?" notification (AfterPartyReceiver) opens this screen.
  */
 public class PartyDetailActivity extends BaseActivity {
     public static final String EXTRA_PARTY = "party_id";
@@ -229,6 +231,7 @@ public class PartyDetailActivity extends BaseActivity {
                 party.showTitle + " · " + party.episodeLabel()));
         if (going) {
             ReminderScheduler.schedule(this, partyId, party.showTitle + " · " + party.episodeLabel(), party.time);
+            ReminderScheduler.scheduleAfterParty(this, code, partyId, party.showTitle + " · " + party.episodeLabel(), party.endTime());
         } else {
             ReminderScheduler.cancel(this, partyId);
         }
@@ -267,6 +270,8 @@ public class PartyDetailActivity extends BaseActivity {
         int newProgress = Math.max(s.progress, party.movie() ? 1 : party.episode);
         ProgressStore.save(this, s, newProgress);
         Ui.toast(this, Lang.s(R.string.progress_updated, s.progressLabel()));
+        // Then: how was it? (optional, Skip closes it)
+        RatingSheet.askIfNotRated(this, s, party.movie() ? 1 : party.episode, null);
     }
 
     /** My copy of the show (keeps my progress), or the party's info if I never added it. */
