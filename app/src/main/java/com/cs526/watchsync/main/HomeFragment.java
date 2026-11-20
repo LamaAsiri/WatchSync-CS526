@@ -30,6 +30,7 @@ import com.cs526.watchsync.shows.ShowAdapter;
 import com.cs526.watchsync.shows.ShowDetailActivity;
 import com.cs526.watchsync.util.EpisodeMath;
 import com.cs526.watchsync.util.Snap;
+import com.cs526.watchsync.util.Avatars;
 import com.cs526.watchsync.util.Ui;
 import com.google.firebase.database.DataSnapshot;
 
@@ -93,7 +94,10 @@ public class HomeFragment extends Fragment {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         tvHello.setText(Lang.s(hour < 12 ? R.string.good_morning : hour < 18 ? R.string.good_afternoon : R.string.good_evening));
         tvName.setText(Ui.firstName(name));
-        Ui.avatar(tvAvatar, name, Prefs.color(requireContext()));
+        Ui.avatar(tvAvatar, name, Prefs.color(requireContext()), Avatars.mine(requireContext()));
+        Avatars.refreshMine(requireContext(), photo -> {
+            if (isAdded()) Ui.avatar(tvAvatar, Prefs.name(requireContext()), Prefs.color(requireContext()), photo);
+        });
         loadUpNext();
         loadNextParty();
         loadActivity();

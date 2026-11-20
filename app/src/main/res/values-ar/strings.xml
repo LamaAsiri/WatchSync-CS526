@@ -363,4 +363,16 @@
         <item quantity="many">%d عضو ما وصلوا</item>
         <item quantity="other">%d عضو ما وصلوا</item>
     </plurals>
+
+    <!-- Profile photo -->
+    <string name="choose_photo">اختر صورة</string>
+    <string name="change_photo">غيّر الصورة</string>
+    <string name="remove_photo">احذف الصورة</string>
+    <string name="title_crop_photo">حرّك وكبّر الصورة</string>
+    <string name="crop_hint">كبّر الصورة أو صغّرها بإصبعين أو بالشريط، واسحبها عشان تحركها.</string>
+    <string name="use_photo">استخدم الصورة</string>
+    <string name="err_open_photo">ما قدرنا نفتح الصورة</string>
+    <string name="zoom">تكبير</string>
+    <string name="zoom_in">كبّر</string>
+    <string name="zoom_out">صغّر</string>
 </resources>

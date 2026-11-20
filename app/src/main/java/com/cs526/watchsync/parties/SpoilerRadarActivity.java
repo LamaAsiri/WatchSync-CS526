@@ -161,6 +161,7 @@ public class SpoilerRadarActivity extends BaseActivity {
             if (m.uid.equals(Db.uid())) continue;
             Integer p = progress.get(m.uid);
             RowAdapter.Row r = new RowAdapter.Row();
+            r.uid = m.uid;
             r.name = m.name;
             r.color = m.color;
             if (p == null) {
