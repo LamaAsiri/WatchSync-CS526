@@ -58,6 +58,10 @@
         <receiver
             android:name=".reminders.PartyReminderReceiver"
             android:exported="false" />
+        <!-- "How was the watch party?" 20 minutes after it ends -->
+        <receiver
+            android:name=".reminders.AfterPartyReceiver"
+            android:exported="false" />
 
         <!-- System broadcast receiver (registered in the manifest): phone finished restarting -->
         <receiver

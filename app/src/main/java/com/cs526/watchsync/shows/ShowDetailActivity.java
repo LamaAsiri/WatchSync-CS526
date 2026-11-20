@@ -51,6 +51,7 @@ public class ShowDetailActivity extends BaseActivity {
     private MaterialButton btnAddLibrary, btnMovieWatched;
     private View layoutEpisodes;
     private int currentSeason = 1;
+    private RatingsSection ratings;
 
     public static void open(Context c, Show s) {
         Intent i = new Intent(c, ShowDetailActivity.class);
@@ -87,10 +88,12 @@ public class ShowDetailActivity extends BaseActivity {
         Ui.poster(ivPoster, show.posterPath);
         registerForContextMenu(ivPoster); // long press on the poster opens the context menu
 
-        episodes = new EpisodeAdapter(this::onEpisodeTap);
+        episodes = new EpisodeAdapter(this::onEpisodeTap, this::onEpisodeLongPress);
         RecyclerView rv = findViewById(R.id.rvEpisodes);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(episodes);
+
+        ratings = new RatingsSection(this, show);
 
         btnAddLibrary.setOnClickListener(v -> saveProgress(show.progress));
         btnMovieWatched.setOnClickListener(v -> saveProgress(show.progress >= 1 ? 0 : 1));
@@ -109,6 +112,7 @@ public class ShowDetailActivity extends BaseActivity {
         }
         refresh();
         setupSeasons();
+        ratings.load();
         if (Lang.arabic()) loadArabicOverview();
     }
 
@@ -150,6 +154,7 @@ public class ShowDetailActivity extends BaseActivity {
         btnMovieWatched.setVisibility(show.movie() ? View.VISIBLE : View.GONE);
         btnMovieWatched.setText(Lang.s(show.progress >= 1 ? R.string.mark_not_watched : R.string.mark_watched));
         invalidateOptionsMenu(); // "Remove" only shows once the show is in My Shows
+        if (ratings != null) ratings.render(); // watching more can unlock friends' reviews
     }
 
     private void setupSeasons() {
@@ -205,13 +210,25 @@ public class ShowDetailActivity extends BaseActivity {
         saveProgress(newProgress);
     }
 
+    /** Long press: rate a watched episode. */
+    private void onEpisodeLongPress(int number) {
+        if (number <= show.progress) ratings.rate(number);
+        else Ui.toast(this, Lang.s(R.string.watch_first));
+    }
+
     private void saveProgress(int newProgress) {
+        int before = show.progress;
         ProgressStore.save(this, show, newProgress)
                 .addOnFailureListener(e -> Ui.toast(this, Lang.s(R.string.saved_phone_only, e.getMessage())));
         if (!inLibrary) Ui.toast(this, Lang.s(R.string.added_to_my_shows, show.title));
         inLibrary = true;
         refresh();
         episodes.setProgress(show.progress);
+        // Watched exactly ONE more episode (or the movie)? Ask how it was.
+        // Marking many at once doesn't ask, so it never turns into 10 pop-ups in a row.
+        if (show.progress == before + 1) {
+            RatingSheet.askIfNotRated(this, show, show.progress, ratings::changed);
+        }
     }
 
     // ---------- Options menu (app bar) ----------

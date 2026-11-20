@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ratings">التقييمات</string>
+    <string name="rate">قيّم</string>
+    <string name="rate_episode_x">قيّم %1$s</string>
+    <string name="rate_the_movie">قيّم الفلم</string>
+    <string name="tap_the_stars">اضغط على النجوم (تقدر تحط نص نجمة)</string>
+    <string name="stars_value">%1$s / 5</string>
+    <string name="review_hint">رأيك (اختياري)</string>
+    <string name="review_spoiler_note">أصدقاؤك اللي ما شافوها للحين ما راح يشوفون تقييمك.</string>
+    <string name="skip">تخطي</string>
+    <string name="save_rating">حفظ</string>
+    <string name="remove_rating">احذف تقييمي</string>
+    <string name="err_pick_stars">اختر نص نجمة على الأقل</string>
+    <string name="rating_saved">انحفظ تقييمك</string>
+    <string name="log_rated">قيّمت %1$s · %2$s ★%3$s</string>
+    <string name="you_label">أنت</string>
+    <string name="summary_you">أنت ★%1$s (%2$d)</string>
+    <string name="summary_friends">الأصدقاء ★%1$s (%2$d)</string>
+    <string name="no_ratings_show">ما فيه تقييمات للحين. قيّم الحلقة بعد ما تشوفها.</string>
+    <string name="no_ratings_movie">ما فيه تقييمات للحين. قيّمه بعد ما تشوفه.</string>
+    <string name="hidden_reviews">🔒 تقييمات مخفية عشان ما تنحرق عليك: %1$d (على حلقات ما شفتها للحين)</string>
+    <string name="watch_first">علّمها إنك شفتها أول، بعدين تقدر تقيّمها.</string>
+    <string name="notif_after_title">كيف كانت الجلسة؟</string>
+    <string name="notif_after_text">%1$s · اضغط عشان تأكد إنك شفتها وتقيّمها (اختياري)</string>
+</resources>

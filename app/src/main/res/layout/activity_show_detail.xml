@@ -130,6 +130,61 @@
                 android:layout_marginTop="12dp"
                 android:visibility="gone" />
 
+            <!-- Ratings: my average, friends' average and reviews (spoiler-safe) -->
+            <LinearLayout
+                android:id="@+id/layoutRatings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Text.Section"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/ratings" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRate"
+                        style="@style/Button.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rate"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvRatingSummary"
+                    style="@style/Text.Muted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="10dp" />
+
+                <LinearLayout
+                    android:id="@+id/listReviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/tvHiddenReviews"
+                    style="@style/Text.Muted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/layoutEpisodes"
                 android:layout_width="match_parent"

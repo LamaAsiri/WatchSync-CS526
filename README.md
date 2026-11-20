@@ -66,6 +66,7 @@ Android Studio ← **File ← Open** ← اختاري مجلد `WatchSync` كا�
 users/{uid}                 name, email, color, photo (صورة 512×512 JPEG بصيغة Base64، اختيارية)
 users/{uid}/groups/{code}   true
 users/{uid}/shows/{tmdbId}  title, posterPath, mediaType, totalEpisodes, seasonCounts, progress ...
+users/{uid}/ratings/{tmdbId}/{episode}  stars (0.5–5), review (500 حرف بالكثير), showTitle, label, ratedAt
 
 groups/{code}               name, adminUid, createdAt
   members/{uid}             name, color, joinedAt
@@ -82,14 +83,16 @@ groups/{code}               name, adminUid, createdAt
 |---|---|---|
 | `my_shows` | نسخة من My Shows مع التقدم | الشاشات تفتح بسرعة وتشتغل بدون نت |
 | `parties` | جلسات كل القروبات وهل أنا رايحة | `BootReceiver` يرجّع التذكيرات بعد إعادة تشغيل الجوال |
-| `recent_activity` | آخر نشاطاتي (إضافة مسلسل، حلقة، قروب، تصويت، جلسة) | قسم Recent activity في Home |
+| `recent_activity` | آخر نشاطاتي (إضافة مسلسل، حلقة، قروب، تصويت، جلسة، تقييم) | قسم Recent activity في Home |
+| `ratings` | تقييماتي (النجوم والرأي) لكل حلقة أو فلم (نسخة 3 من قاعدة البيانات) | نعرف إذا الحلقة متقيّمة قبل، وتطلع تقييماتي بدون نت |
 
 ## SharedPreferences
 اسم المستخدم ولونه، وإعداد تذكير الجلسات، والوضع الليلي.
 
 ## AlarmManager + BroadcastReceivers
 - تذكير قبل الجلسة بساعة (`reminders/ReminderScheduler` + `PartyReminderReceiver`).
-- `BootReceiver`: يستقبل `ACTION_BOOT_COMPLETED` (رسالة من النظام) ويرجّع التذكيرات من جدول `parties`.
+- "كيف كانت الجلسة؟" بعد ما تخلص الجلسة بـ ٢٠ دقيقة (`AfterPartyReceiver`). الإشعار يفتح الجلسة: تأكد إنك شفتها، وبعدها تقيّمها (اختياري).
+- `BootReceiver`: يستقبل `ACTION_BOOT_COMPLETED` (رسالة من النظام) ويرجّع التذكيرات (قبل وبعد الجلسة) من جدول `parties`.
 
 ## Intents
 - صريحة (Explicit): التنقل بين كل الشاشات مع `putExtra`.
@@ -106,6 +109,14 @@ groups/{code}               name, adminUid, createdAt
 - ما استخدمنا Firebase Storage لأنه صار يحتاج خطة Blaze المدفوعة.
 - الصورة تطلع في Home وProfile وقائمة الأعضاء والجلسات وSpoiler radar. اللي ما عنده صورة تبقى دائرته باللون.
 - الكود: `util/Avatars.java` (الحفظ والتحميل)، `util/CropView.java` (القص والتكبير)، `main/CropPhotoActivity.java`.
+
+## التقييمات
+- لما تعلّم **حلقة وحدة** إنك شفتها (أو تخلص فلم)، تطلع نافذة من تحت (Bottom Sheet): ٥ نجوم بأنصاف (`RatingBar` بـ stepSize 0.5)، ورأي اختياري لين ٥٠٠ حرف مع عدّاد، وزر **تخطي**.
+- لو علّمت كذا حلقة مرة وحدة، ما تطلع النافذة (عشان ما تصير ١٠ نوافذ ورا بعض). ولو الحلقة متقيّمة قبل، ما تطلع بعد.
+- تقدر تقيّم أي حلقة شفتها بضغطة طويلة عليها، أو من زر **Rate** في قسم Ratings.
+- قسم **Ratings** في صفحة المسلسل: متوسط تقييمك، متوسط أصدقائك (كل اللي معك في القروبات)، وآراءهم.
+- **حماية من الحرق:** تقييم صاحبتك لحلقة ٨ ما يطلع لك إلا إذا وصلت لحلقة ٨. قبلها ينحسب بس كـ "مخفي".
+- الكود: `shows/RatingSheet.java`، `shows/RatingsSection.java`، `data/RatingStore.java`، `model/Rating.java`.
 
 ## الوضع الليلي
 من Profile ← Dark mode. الألوان في `res/values-night/colors.xml`.

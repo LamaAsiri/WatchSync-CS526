@@ -74,7 +74,7 @@
     <string name="my_progress">MY PROGRESS</string>
     <string name="add_to_my_shows">Add to My Shows</string>
     <string name="episodes">Episodes</string>
-    <string name="tap_an_episode_to_mark_it">Tap an episode to mark it (and everything before it) as watched.</string>
+    <string name="tap_an_episode_to_mark_it">Tap an episode to mark it (and everything before it) as watched. Long-press a watched episode to rate it.</string>
     <string name="create_your_account">Create your account</string>
     <string name="name">Name</string>
     <string name="your_name">Your name</string>
