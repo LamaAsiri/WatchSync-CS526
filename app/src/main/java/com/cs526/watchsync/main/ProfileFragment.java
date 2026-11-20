@@ -20,6 +20,7 @@ import com.cs526.watchsync.data.Db;
 import com.cs526.watchsync.data.LocalDb;
 import com.cs526.watchsync.data.Prefs;
 import com.cs526.watchsync.model.Show;
+import com.cs526.watchsync.util.Avatars;
 import com.cs526.watchsync.util.Ui;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.firebase.auth.FirebaseAuth;
@@ -69,7 +70,10 @@ public class ProfileFragment extends Fragment {
     public void onResume() {
         super.onResume();
         String name = Prefs.name(requireContext());
-        Ui.avatar(tvAvatar, name, Prefs.color(requireContext()));
+        Ui.avatar(tvAvatar, name, Prefs.color(requireContext()), Avatars.mine(requireContext()));
+        Avatars.refreshMine(requireContext(), photo -> {
+            if (isAdded()) Ui.avatar(tvAvatar, Prefs.name(requireContext()), Prefs.color(requireContext()), photo);
+        });
         tvName.setText(name);
         tvEmail.setText(Db.email());
 
@@ -110,6 +114,7 @@ public class ProfileFragment extends Fragment {
         FirebaseAuth.getInstance().signOut();
         LocalDb.get(requireContext()).clear();
         Prefs.clear(requireContext());
+        Avatars.clear(requireContext());
         Intent i = new Intent(requireContext(), WelcomeActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);

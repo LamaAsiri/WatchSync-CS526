@@ -31,6 +31,7 @@
         <activity android:name=".auth.ForgotPasswordActivity" android:exported="false" />
         <activity android:name=".main.MainActivity" android:exported="false" />
         <activity android:name=".main.EditProfileActivity" android:exported="false" />
+        <activity android:name=".main.CropPhotoActivity" android:exported="false" />
 
         <!-- 2. Groups & Database (Jory) -->
         <activity android:name=".groups.CreateGroupActivity" android:exported="false" />

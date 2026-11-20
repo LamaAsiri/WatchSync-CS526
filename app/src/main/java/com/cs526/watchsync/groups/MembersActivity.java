@@ -67,6 +67,7 @@ public class MembersActivity extends BaseActivity {
             List<RowAdapter.Row> rows = new ArrayList<>();
             for (Member m : members) {
                 RowAdapter.Row r = new RowAdapter.Row();
+                r.uid = m.uid;
                 r.name = m.name;
                 r.color = m.color;
                 r.title = m.uid.equals(Db.uid()) ? m.name + " (you)" : m.name;

@@ -1,11 +1,12 @@
 package com.cs526.watchsync.util;
 
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.TextView;
 
 import com.cs526.watchsync.R;
 
-/** The 4 avatar colours row (used in Sign up and Edit profile). */
+/** The 4 avatar colours row (used in Sign up and Edit profile). Can also preview a profile photo. */
 public class ColorPicker {
     public interface NameSource {
         String name();
@@ -16,6 +17,7 @@ public class ColorPicker {
     private final View[] dots = new View[4];
     private final NameSource nameSource;
     private String selected;
+    private Bitmap photo;   // shown instead of the colour when set
 
     public ColorPicker(View root, String startColor, NameSource nameSource) {
         this.root = root;
@@ -44,7 +46,13 @@ public class ColorPicker {
     }
 
     public void refresh() {
-        Ui.avatar(avatar, nameSource.name(), selected);
+        Ui.avatar(avatar, nameSource.name(), selected, photo);
+    }
+
+    /** null = no photo, show the colour. */
+    public void setPhoto(Bitmap photo) {
+        this.photo = photo;
+        refresh();
     }
 
     public String selected() {

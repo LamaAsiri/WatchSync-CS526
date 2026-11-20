@@ -10,7 +10,7 @@ import java.security.SecureRandom;
 /**
  * Firebase Realtime Database layout:
  *
- * users/{uid}            name, email, color
+ * users/{uid}            name, email, color, photo (512x512 JPEG as Base64 text, optional)
  * users/{uid}/groups     {code: true}
  * users/{uid}/shows      {tmdbId: Show}       my library + my progress (like TV Time)
  *

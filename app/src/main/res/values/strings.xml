@@ -356,4 +356,16 @@
         <item quantity="one">%d member hasn\'t</item>
         <item quantity="other">%d members haven\'t</item>
     </plurals>
+
+    <!-- Profile photo -->
+    <string name="choose_photo">Choose photo</string>
+    <string name="change_photo">Change photo</string>
+    <string name="remove_photo">Remove photo</string>
+    <string name="title_crop_photo">Move and zoom</string>
+    <string name="crop_hint">Pinch or use the slider to zoom. Drag to move the photo.</string>
+    <string name="use_photo">Use photo</string>
+    <string name="err_open_photo">Couldn\'t open this photo</string>
+    <string name="zoom">Zoom</string>
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
 </resources>

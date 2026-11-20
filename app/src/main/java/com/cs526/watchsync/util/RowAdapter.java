@@ -17,6 +17,7 @@ import java.util.List;
 public class RowAdapter extends RecyclerView.Adapter<RowAdapter.VH> {
 
     public static class Row {
+        public String uid = "";   // used to show the person's photo
         public String name = "";
         public String color = "";
         public String title = "";
@@ -44,6 +45,14 @@ public class RowAdapter extends RecyclerView.Adapter<RowAdapter.VH> {
     public void onBindViewHolder(@NonNull VH h, int position) {
         Row r = rows.get(position);
         Ui.avatar(h.avatar, r.name, r.color);
+        // the photo comes from Firebase; only show it if this row still belongs to the same person
+        final String uid = r.uid;
+        h.avatar.setTag(uid);
+        if (!uid.isEmpty()) {
+            Avatars.load(uid, photo -> {
+                if (photo != null && uid.equals(h.avatar.getTag())) Ui.avatar(h.avatar, r.name, r.color, photo);
+            });
+        }
         h.title.setText(r.title.isEmpty() ? r.name : r.title);
         h.sub.setText(r.sub);
         h.sub.setVisibility(r.sub.isEmpty() ? View.GONE : View.VISIBLE);

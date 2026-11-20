@@ -63,7 +63,7 @@ Android Studio ← **File ← Open** ← اختاري مجلد `WatchSync` كا�
 
 ## قاعدة البيانات (Firebase Realtime Database)
 ```
-users/{uid}                 name, email, color
+users/{uid}                 name, email, color, photo (صورة 512×512 JPEG بصيغة Base64، اختيارية)
 users/{uid}/groups/{code}   true
 users/{uid}/shows/{tmdbId}  title, posterPath, mediaType, totalEpisodes, seasonCounts, progress ...
 
@@ -94,10 +94,18 @@ groups/{code}               name, adminUid, createdAt
 ## Intents
 - صريحة (Explicit): التنقل بين كل الشاشات مع `putExtra`.
 - ضمنية (Implicit): `ACTION_SEND` لمشاركة كود القروب أو مسلسل، و`ACTION_VIEW` لفتح صفحة المسلسل في المتصفح.
+- اختيار صورة البروفايل: منتقي الصور حق الجوال (Photo Picker) عن طريق `ActivityResultContracts.PickVisualMedia`، وبعدها شاشة القص `CropPhotoActivity` ترجع النتيجة بـ `StartActivityForResult`.
 
 ## Menus
 - Options menu في شاشة المسلسل: Share، Open on TMDB website، Remove from My Shows.
 - Context menu: ضغطة مطوّلة على البوستر.
+
+## صورة البروفايل
+- من Profile ← Edit profile ← **Choose photo**: تختار صورة من الجوال، وبعدها تحركها وتكبرها أو تصغرها داخل الدائرة (بإصبعين أو بالشريط).
+- الصورة تنقص لـ 512×512 بكسل، وهذا أكبر من أكبر دائرة في التطبيق، فتطلع واضحة. تنحفظ JPEG بصيغة Base64 في `users/{uid}/photo`.
+- ما استخدمنا Firebase Storage لأنه صار يحتاج خطة Blaze المدفوعة.
+- الصورة تطلع في Home وProfile وقائمة الأعضاء والجلسات وSpoiler radar. اللي ما عنده صورة تبقى دائرته باللون.
+- الكود: `util/Avatars.java` (الحفظ والتحميل)، `util/CropView.java` (القص والتكبير)، `main/CropPhotoActivity.java`.
 
 ## الوضع الليلي
 من Profile ← Dark mode. الألوان في `res/values-night/colors.xml`.

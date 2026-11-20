@@ -7,10 +7,15 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.bumptech.glide.Glide;
 import com.cs526.watchsync.data.TmdbApi;
@@ -35,6 +40,21 @@ public final class Ui {
 
     /** Round avatar with the first letter of the name in the person's colour. */
     public static void avatar(TextView v, String name, String color) {
+        avatar(v, name, color, null);
+    }
+
+    /** Round avatar: the person's photo if they have one, otherwise the first letter in their colour. */
+    public static void avatar(TextView v, String name, String color, @Nullable Bitmap photo) {
+        if (photo != null) {
+            RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(v.getResources(), photo);
+            round.setCircular(true);
+            round.setAntiAlias(true);
+            v.setBackgroundTintList(null);
+            v.setBackground(round);
+            v.setText("");
+            return;
+        }
+        v.setBackgroundResource(R.drawable.bg_circle);
         String letter = (name == null || name.trim().isEmpty()) ? "?" : name.trim().substring(0, 1).toUpperCase(Locale.ROOT);
         v.setText(letter);
         int bg = parse(color, RED);

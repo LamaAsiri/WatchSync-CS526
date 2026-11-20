@@ -13,6 +13,7 @@ import com.cs526.watchsync.R;
 import com.cs526.watchsync.data.Db;
 import com.cs526.watchsync.data.Prefs;
 import com.cs526.watchsync.main.MainActivity;
+import com.cs526.watchsync.util.Avatars;
 import com.cs526.watchsync.util.Snap;
 import com.cs526.watchsync.util.Ui;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,6 +56,7 @@ public class LoginActivity extends BaseActivity {
                     if (task.isSuccessful() && task.getResult() != null) {
                         DataSnapshot me = task.getResult();
                         Prefs.saveUser(this, Snap.str(me.child("name")), Snap.str(me.child("color")));
+                        Avatars.saveMine(this, Snap.str(me.child("photo")));
                     }
                     openHome();
                 }))
